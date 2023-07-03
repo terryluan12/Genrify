@@ -160,4 +160,5 @@ cython_debug/
 #.idea/
 
 # gtzan dataset
-hub_activeloop_gtzan-genre
+Data
+archive.zip
