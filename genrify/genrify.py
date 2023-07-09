@@ -1,3 +1,9 @@
-
+from datasources import download_datasets
+from preprocessing import preprocess
 if __name__ == "__main__":
-    print("Hello, World!")
+    # Download datasets
+    download_datasets()
+    
+    preprocess("datasources/Data")
+    
+    
