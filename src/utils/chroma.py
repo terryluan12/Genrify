@@ -15,7 +15,7 @@ def extract_features_chroma(file_name):
       audio, sample_rate = librosa.load(file_name)
       chroma = librosa.feature.chroma_stft(y=audio, sr=sample_rate)
     except Exception as e:
-      print("Error encountered while parsing file: ", file_name)
+      print("Chroma: Error encountered while parsing file: ", file_name)
       return None
     return chroma
 
