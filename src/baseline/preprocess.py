@@ -2,6 +2,9 @@ import os
 import numpy as np
 from torch.utils.data import TensorDataset, DataLoader
 
+from knn import *
+from utils.mfcc import extract_features_mfcc
+
 data_dir = '/content/Data/genres_original'
 
 X = []
