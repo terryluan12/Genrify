@@ -2,22 +2,25 @@ from utils.chroma import convert_to_chroma_images
 from utils.mel_spectrogram import convert_to_mel_spectrogram_images
 from utils.spectrogram import convert_to_spectrogram_images
 from utils.mfcc import convert_to_mfcc_images
+from preprocessing import split_into_3_seconds
 
 
-def preprocess(data_dir):
+def preprocess(root_dir):
     """
     Preprocess the data
 
     Args:
-        data_dir (str): path to data directory. Assume that the data_dir has the following structure:
-            data_dir
-            ├── genre1
-            │   ├── file1.wav
-            │   ├── file2.wav
-            │   └── ...
+        root_dir (str): path to data directory. Assume that the root_dir has the following structure:
+            root_dir
+            └── data_dir
+                ├── genre1
+                │   ├── file1.wav
+                │   ├── file2.wav
+                │   └── ...
     """
+    data_dir = root_dir + "/processed_data"
 
-    # TODO: Add function call to split audio files into 3 second clips
+    split_into_3_seconds(root_dir)
     # TODO: Add function call to convert audio files to features
     convert_to_spectrogram_images(data_dir)
     convert_to_mel_spectrogram_images(data_dir)
