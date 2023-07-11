@@ -21,7 +21,7 @@ def download_datasets(root_dir="."):
     
     with ZipFile(fname, 'r') as zipObj:
         # Extract all the contents of zip file in different directory
-        zipObj.extractall("datasources")
+        zipObj.extractall(os.path.join(root_dir, "datasources"))
     os.remove(fname)
     print(f"Downloaded Datasources")
         
