@@ -1,24 +1,40 @@
 import librosa
 import matplotlib.pyplot as plt
 
-def get_spectrograms():
-
-  audio_file = '/content/file_example_WAV_1MG.wav'
-  audio, sample_rate = librosa.load(audio_file, sr=None)
-  spectrogram = librosa.stft(audio)
-  spectrogram_db = librosa.amplitude_to_db(abs(spectrogram))
-
-  plt.figure(figsize=(10, 4))
-  librosa.display.specshow(spectrogram_db, sr=sample_rate, x_axis='time', y_axis='hz')
-  plt.colorbar(format='%+2.0f dB')
-  plt.title('Spectrogram')
-  plt.show()
-    
-def convert_to_spectrogram_images(data_dir):
+def extract_features_spectrogram(file_name):
     """
-    Converts the WAV files to Spectrogram features and saves them as images in a new directory structure.
+    Extract spectrogram features from audio file
 
     Args:
-        data_dir (str): path to data directory
+        file_name (str): path to audio file
+    Returns:
+        spectrogram_db (np.array): Spectrogram features in dB (number of frequncy bins) x (number of time frames)
     """
-    pass
+    try:
+        audio, sample_rate = librosa.load(file_name, sr=22000) # Want to plot up to 11kHz -> Requires 22kHz sampling freq
+        spectrogram = librosa.stft(audio) 
+        spectrogram_db = librosa.amplitude_to_db(abs(spectrogram))
+
+    except Exception as e:
+        print("Error encountered while parsing file: ", file_name)
+        return None
+    return spectrogram_db
+
+def save_spectrogram_image(spectrogram_data, file_name):
+    """
+    Save spectrogram data as an image
+
+    Args:
+        spectrogram_data (np.array): Spectrogram features in dB (number of frequncy bins) x (number of time frames) 
+        file_name (str): path to save image
+    """
+    if spectrogram_data is None:
+        return
+    plt.figure(figsize=(10, 4), frameon=False)
+    plt.ylim(0, 11000) # Always plot up to 11kHz
+    librosa.display.specshow(spectrogram_data, x_axis='time', y_axis='hz', vmin=-40, vmax=40) # Always show magnitude from -40 to +40 dB
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig(file_name)
+    plt.cla()
+    plt.close()  
