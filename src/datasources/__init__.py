@@ -2,7 +2,7 @@ import os
 import requests
 from zipfile import ZipFile
 
-def download_datasets():
+def download_datasets(root_dir="."):
     fname = "datasources/music.zip"
     url = "https://osf.io/drjhb/download"
     print("Downloading Datasources...")
