@@ -2,8 +2,8 @@ import os
 import requests
 from zipfile import ZipFile
 
-def download_datasets():
-    fname = "/content/Genrify/src/datasources/music.zip"
+def download_datasets(root_dir="."):
+    fname = os.path.join(root_dir, "datasources", "music.zip")
     url = "https://osf.io/drjhb/download"
     print("Downloading Datasources...")
 
@@ -21,7 +21,7 @@ def download_datasets():
     
     with ZipFile(fname, 'r') as zipObj:
         # Extract all the contents of zip file in different directory
-        zipObj.extractall("datasources")
+        zipObj.extractall(os.path.join(root_dir, "datasources"))
     os.remove(fname)
     print(f"Downloaded Datasources")
         

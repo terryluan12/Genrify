@@ -4,3 +4,5 @@ imageio-ffmpeg
 matplotlib
 torch
 torchvision
+pydub
+ffmpeg
