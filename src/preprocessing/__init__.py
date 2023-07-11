@@ -2,8 +2,6 @@ from utils.chroma import convert_to_chroma_images
 from utils.mel_spectrogram import convert_to_mel_spectrogram_images
 from utils.spectrogram import convert_to_spectrogram_images
 from utils.mfcc import convert_to_mfcc_images
-from preprocessing import split_into_3_seconds
-
 
 def preprocess(root_dir):
     """
