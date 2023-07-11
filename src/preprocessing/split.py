@@ -1,5 +1,7 @@
 import os
 from pydub import AudioSegment
+from torchvision.datasets import DatasetFolder
+import torch
 
 def split_into_3_seconds(datasources_dir="datasources"):
     error_converted_files = []
@@ -33,4 +35,20 @@ def split_into_3_seconds(datasources_dir="datasources"):
                         print(f"Importing file {i}")
                         extract = sound[(i-1) * 3000 : i * 3000]
                         extract.export(os.path.join(destination_dir, file + "_trimmed" + str(i) + ".wav"), format="wav")
-    
+
+
+def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", num_subsets=4):
+    subsets = []
+    subset_split = [0.7, 0.15, 0.15]
+
+    divide = 1./num_subsets
+    equal_lengths = [divide for _ in range(num_subsets)]
+
+    full_dataset = DatasetFolder(datasources_dir, torchaudio.load, extensions=[".wav"])
+    print(f"len(full_dataset) is {len(full_dataset)}")
+    full_subsets = torch.utils.data.random_split(full_dataset, equal_lengths)
+    for full_subset in full_subsets:
+        subset = torch.utils.data.random_split(full_subset, subset_split)
+        subsets.append(subset)
+
+    return subsets
