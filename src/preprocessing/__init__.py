@@ -2,10 +2,11 @@ from utils.chroma import convert_to_chroma_images
 from utils.mel_spectrogram import convert_to_mel_spectrogram_images
 from utils.spectrogram import convert_to_spectrogram_images
 from utils.mfcc import convert_to_mfcc_images
-from preprocessing import split_into_3_seconds
+from preprocessing.split import split_into_3_seconds
+import os
 
 
-def preprocess(root_dir):
+def preprocess(root_dir="datasources"):
     """
     Preprocess the data
 
@@ -18,7 +19,7 @@ def preprocess(root_dir):
                 │   ├── file2.wav
                 │   └── ...
     """
-    data_dir = root_dir + "/processed_data"
+    data_dir = os.path.join(root_dir, "processed_data")
 
     split_into_3_seconds(root_dir)
     # TODO: Add function call to convert audio files to features
