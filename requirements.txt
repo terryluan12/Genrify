@@ -1,0 +1,6 @@
+librosa
+imageio
+imageio-ffmpeg
+matplotlib
+torch
+torchvision
