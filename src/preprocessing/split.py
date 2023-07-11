@@ -1,10 +1,10 @@
 import os
 from pydub import AudioSegment
 
-def split_into_3_seconds(root_dir="datasources"):
+def split_into_3_seconds(datasources_dir="datasources"):
     error_converted_files = []
-    data_dir = os.path.join(root_dir, "Data", "genres_original")
-    processed_dir = os.path.join(root_dir,"processed_data")
+    data_dir = os.path.join(datasources_dir, "Data", "genres_original")
+    processed_dir = os.path.join(datasources_dir,"processed_data")
     if not os.path.isdir(processed_dir):
         os.mkdir(processed_dir)
 
