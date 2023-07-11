@@ -3,7 +3,7 @@ import requests
 from zipfile import ZipFile
 
 def download_datasets():
-    fname = "datasources/music.zip"
+    fname = "/content/Genrify/src/datasources/music.zip"
     url = "https://osf.io/drjhb/download"
     print("Downloading Datasources...")
 
