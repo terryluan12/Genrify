@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from torch.utils.data import TensorDataset, DataLoader
+import torch
 
 from utils.mfcc import extract_features_mfcc
 
@@ -41,9 +41,9 @@ def get_knn_dataloaders():
     # Flatten mfccs
     X_tensor = X_tensor.view(X_tensor.size(0), -1)
 
-    dataset = TensorDataset(X_tensor, y_tensor)
+    dataset = torch.utils.data.TensorDataset(X_tensor, y_tensor)
 
     batch_size = len(dataset)
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     return dataloader
