@@ -6,7 +6,7 @@ from utils.mfcc import extract_features_mfcc
 
 def get_knn_dataloaders():
 
-    data_dir = "/content/Genrify/src/Data/datasources/genres_original"
+    data_dir = "/content/Genrify/src/datasources/Data/genres_original"
 
     X = []
     y = []
