@@ -14,7 +14,6 @@ def extract_features_mfcc(datapoint):
     num_mfcc = 40
     audio, sample_rate = datapoint
     mfccs = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=num_mfcc)
-    mfccs = mfccs[:, 0:num_mfcc]
     return mfccs
 
 # save mfcc features to an image
