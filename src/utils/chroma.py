@@ -32,7 +32,7 @@ def save_chroma_image(chroma, file_name):
     plt.cla()
     plt.close()
     
-def convert_to_chroma_images(datasets):
+def convert_to_chroma_images(datasets, root_dir="."):
     """
     Converts the WAV files to Chroma features and saves them as images in a new directory structure.
 
