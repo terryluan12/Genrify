@@ -165,3 +165,6 @@ archive.zip
 Data/
 processed_data
 kaggle.json
+spectrogram
+mfcc
+chroma

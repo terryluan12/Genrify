@@ -2,21 +2,17 @@ import librosa
 import matplotlib.pyplot as plt
 import os
 
-def extract_features_chroma(file_name):
+def extract_features_chroma(datapoint):
     """
-      Extract Chroma features from audio file
+    Extract Chroma features from audio file
 
-      Args:
-          file_name (str): path to audio file
-      Returns:
-          chroma (np.array): Chroma features
-      """
-    try:
-      audio, sample_rate = librosa.load(file_name)
-      chroma = librosa.feature.chroma_stft(y=audio, sr=sample_rate)
-    except Exception as e:
-      print("Chroma: Error encountered while parsing file: ", file_name)
-      return None
+    Args:
+        datapoint (tuple(numpy.ndarray, int)):  Tuple of librosa sampled audio file
+    Returns:
+        chroma (np.array): Chroma features
+    """
+    audio, sample_rate = datapoint
+    chroma = librosa.feature.chroma_stft(y=audio, sr=sample_rate)
     return chroma
 
 def save_chroma_image(chroma, file_name):
@@ -36,26 +32,23 @@ def save_chroma_image(chroma, file_name):
     plt.cla()
     plt.close()
     
-def convert_to_chroma_images(data_dir):
+def convert_to_chroma_images(datasets):
     """
     Converts the WAV files to Chroma features and saves them as images in a new directory structure.
 
     Args:
-        data_dir (str): path to data directory
+        datasets (List): list of datasets that are being converted to MFCC Images
     """
-    parent_dir = os.path.dirname(data_dir)
-    processed_data_dir = os.path.join(parent_dir, 'chroma')
+    print(f'Converting to Chroma')
+    processed_data_dir = "chroma"
     os.makedirs(processed_data_dir, exist_ok=True)
 
-    for dirpath, dirnames, filenames in os.walk(data_dir):
-        for dirname in dirnames:
-            child_folder_path = os.path.join(dirpath, dirname)
-            new_dir = os.path.join(processed_data_dir, dirname)
-            os.makedirs(new_dir, exist_ok=True)
-            for file in os.listdir(child_folder_path):
-                file_path = os.path.join(child_folder_path, file)
-                chroma_features = extract_features_chroma(file_path)
-                image_path = os.path.join(new_dir, f"{os.path.basename(file_path)}.png")
-                save_chroma_image(chroma_features, image_path)
-
-    print(f"Processed chroma data saved in {processed_data_dir}")
+    i = 0
+    for dataset in datasets:
+        for data, label in dataset:
+            os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
+            chroma_features = extract_features_chroma(data)
+            mfccs = extract_features_chroma(data)
+            image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
+            save_chroma_image(chroma_features, image_path)
+            i += 1

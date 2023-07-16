@@ -2,23 +2,19 @@ import librosa
 import matplotlib.pyplot as plt
 import os
 
-def extract_features_spectrogram(file_name):
+def extract_features_spectrogram(datapoint):
     """
     Extract spectrogram features from audio file
 
     Args:
-        file_name (str): path to audio file
+        datapoint (tuple(numpy.ndarray, int)):  Tuple of librosa sampled audio file
     Returns:
         spectrogram_db (np.array): Spectrogram features in dB (number of frequncy bins) x (number of time frames)
     """
-    try:
-        audio, sample_rate = librosa.load(file_name, sr=22000) # Want to plot up to 11kHz -> Requires 22kHz sampling freq
-        spectrogram = librosa.stft(audio) 
-        spectrogram_db = librosa.amplitude_to_db(abs(spectrogram))
+    audio, sample_rate = datapoint
+    spectrogram = librosa.stft(audio) 
+    spectrogram_db = librosa.amplitude_to_db(abs(spectrogram))
 
-    except Exception as e:
-        print("Error encountered while parsing file: ", file_name)
-        return None
     return spectrogram_db
 
 def save_spectrogram_image(spectrogram_data, file_name):
@@ -40,24 +36,23 @@ def save_spectrogram_image(spectrogram_data, file_name):
     plt.cla()
     plt.close()
 
-def convert_to_spectrogram_images(data_dir):
+def convert_to_spectrogram_images(datasets):
     """
     Converts the WAV files to Spectrogram features and saves them as images in a new directory structure.
 
     Args:
-        data_dir (str): path to data directory
+        datasets (List): list of datasets that are being converted to Spectrogram features
     """
-    parent_dir = os.path.dirname(data_dir)
-    processed_data_dir = os.path.join(parent_dir, 'spectrogram')
+    print(f'Converting to Spectrogram')
+    processed_data_dir = "spectrogram"
     os.makedirs(processed_data_dir, exist_ok=True)
-
-    for dirpath, dirnames, filenames in os.walk(data_dir):
-        for dirname in dirnames:
-            child_folder_path = os.path.join(dirpath, dirname)
-            new_dir = os.path.join(processed_data_dir, dirname)
-            os.makedirs(new_dir, exist_ok=True)
-            for file in os.listdir(child_folder_path):
-                file_path = os.path.join(child_folder_path, file)
-                spectrogram_data = extract_features_spectrogram(file_path)
-                image_path = os.path.join(new_dir, f"{os.path.basename(file_path)}.png")
-                save_spectrogram_image(spectrogram_data, image_path)  
+    
+    i = 0
+    for dataset in datasets:
+        for data, label in dataset:
+            os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
+            spectrogram_data = extract_features_spectrogram(data)
+            image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
+            save_spectrogram_image(spectrogram_data, image_path)  
+            
+            i += 1
