@@ -33,7 +33,7 @@ def split_into_3_seconds(datasources_dir="datasources"):
                     print(f"Duration in seconds is {num_segments}")
                     for i in range(num_segments):
                         print(f"Importing file {i}")
-                        extract = sound[(i-1) * 3000 : i * 3000]
+                        extract = sound[i * 3000 : (i + 1) * 3000]
                         extract.export(os.path.join(destination_dir, file + "_trimmed" + str(i) + ".wav"), format="wav")
 
 
