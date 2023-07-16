@@ -43,7 +43,7 @@ def convert_to_mfcc_images(datasets):
         datasets (List): list of datasets that are being converted to MFCC Images
     """
     print(f'Converting to MFCC')
-    processed_data_dir = "mfcc"
+    processed_data_dir = "datasources/mfcc"
     os.makedirs(processed_data_dir, exist_ok=True)
     
     i = 0

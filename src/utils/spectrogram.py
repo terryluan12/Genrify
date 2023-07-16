@@ -44,7 +44,7 @@ def convert_to_spectrogram_images(datasets):
         datasets (List): list of datasets that are being converted to Spectrogram features
     """
     print(f'Converting to Spectrogram')
-    processed_data_dir = "spectrogram"
+    processed_data_dir = "datasources/spectrogram"
     os.makedirs(processed_data_dir, exist_ok=True)
     
     i = 0
