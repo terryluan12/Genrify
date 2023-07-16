@@ -15,13 +15,13 @@ def split_into_3_seconds(datasources_dir="datasources"):
     for _, dirs, _ in os.walk(data_dir):
         for dir in dirs:
             print(f"Traversing {dir}")
-            origin_dir = os.path.join(data_dir)
+            origin_dir = os.path.join(data_dir, dir)
             destination_dir = os.path.join(processed_dir, dir)
             if not os.path.isdir(destination_dir):
                 os.mkdir(destination_dir)
             for _, _, files in os.walk(origin_dir):
                 for file in files:
-                    origin_file = os.path.join(origin_dir, dir, file)
+                    origin_file = os.path.join(origin_dir, file)
                     try:
                         sound = AudioSegment.from_wav(origin_file)
                     except:
@@ -42,7 +42,6 @@ def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", 
     equal_lengths = [divide for _ in range(num_subsets)]
 
     full_dataset = DatasetFolder(datasources_dir, librosa.load, extensions=[".wav"])
-    print(f"len(full_dataset) is {len(full_dataset)}")
     full_subsets = torch.utils.data.random_split(full_dataset, equal_lengths)
     for full_subset in full_subsets:
         subset = torch.utils.data.random_split(full_subset, subset_split)
