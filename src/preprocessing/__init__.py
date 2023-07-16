@@ -26,7 +26,7 @@ def preprocess(split_use, root_dir=".", split_num = 4):
 
     full_dataset= split_into_exclusive_datasets(data_dir)[split_use]
     # TODO: Add function call to convert audio files to features
-    convert_to_spectrogram_images(full_dataset)
-    convert_to_mel_spectrogram_images(full_dataset)
-    convert_to_chroma_images(full_dataset)
-    convert_to_mfcc_images(full_dataset)
+    convert_to_spectrogram_images(full_dataset, root_dir)
+    convert_to_mel_spectrogram_images(full_dataset, root_dir)
+    convert_to_chroma_images(full_dataset, root_dir)
+    convert_to_mfcc_images(full_dataset, root_dir)

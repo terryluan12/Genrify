@@ -35,15 +35,16 @@ def save_mfcc_image(mfccs, file_name):
     plt.cla()
     plt.close()
     
-def convert_to_mfcc_images(datasets):
+def convert_to_mfcc_images(datasets, root_dir="."):
     """
     Converts the WAV files to MFCC features and saves them as images in a new directory structure.
 
     Args:
         datasets (List): list of datasets that are being converted to MFCC Images
+        root_dir (string): path to the source directory of the Genrify module
     """
     print(f'Converting to MFCC')
-    processed_data_dir = "datasources/mfcc"
+    processed_data_dir = os.path.join(root_dir, "datasources/mfcc")
     os.makedirs(processed_data_dir, exist_ok=True)
     
     i = 0

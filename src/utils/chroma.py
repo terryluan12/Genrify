@@ -38,9 +38,10 @@ def convert_to_chroma_images(datasets):
 
     Args:
         datasets (List): list of datasets that are being converted to MFCC Images
+        root_dir (string): path to the source directory of the Genrify module
     """
     print(f'Converting to Chroma')
-    processed_data_dir = "datasources/chroma"
+    processed_data_dir = os.path.join(root_dir, "datasources/chroma")
     os.makedirs(processed_data_dir, exist_ok=True)
 
     i = 0

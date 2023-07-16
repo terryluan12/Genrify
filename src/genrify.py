@@ -3,7 +3,7 @@ from preprocessing import preprocess
 import os
 
 # Change to subset used to train the CNN
-subset_num = -1
+subset_num = 0
 
 
 if not os.path.isdir("datasources/Data") and not os.path.isdir("datasources/processed_data"):

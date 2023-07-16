@@ -17,11 +17,12 @@ def get_mel_spectrograms():
 
 
 
-def convert_to_mel_spectrogram_images(data_dir):
+def convert_to_mel_spectrogram_images(data_dir, root_dir):
     """
     Converts the WAV files to Mel Spectrogram features and saves them as images in a new directory structure.
 
     Args:
         data_dir (str): path to data directory
+        root_dir (string): path to the source directory of the Genrify module
     """
     pass

@@ -36,15 +36,16 @@ def save_spectrogram_image(spectrogram_data, file_name):
     plt.cla()
     plt.close()
 
-def convert_to_spectrogram_images(datasets):
+def convert_to_spectrogram_images(datasets, root_dir="."):
     """
     Converts the WAV files to Spectrogram features and saves them as images in a new directory structure.
 
     Args:
         datasets (List): list of datasets that are being converted to Spectrogram features
+        root_dir (string): path to the source directory of the Genrify module
     """
     print(f'Converting to Spectrogram')
-    processed_data_dir = "datasources/spectrogram"
+    processed_data_dir = os.path.join(root_dir, "datasources/spectrogram")
     os.makedirs(processed_data_dir, exist_ok=True)
     
     i = 0
