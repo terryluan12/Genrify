@@ -35,6 +35,7 @@ def split_into_3_seconds(datasources_dir="datasources"):
 
 def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", num_subsets=4):
     print(f"Splitting processed Data into {num_subsets} exclusive datasets.")
+    torch.manual_seed(42)
     subsets = []
     subset_split = [0.7, 0.15, 0.15]
 
