@@ -6,7 +6,7 @@ from preprocessing.split import split_into_3_seconds, split_into_exclusive_datas
 import os
 
 
-def preprocess(split_use, root_dir=".", split_num = 4):
+def preprocess(split_use, method, root_dir=".", split_num = 4):
     """
     Preprocess the data
 
@@ -18,6 +18,7 @@ def preprocess(split_use, root_dir=".", split_num = 4):
                 │   ├── file1.wav
                 │   ├── file2.wav
                 │   └── ...
+        
     """
     data_dir = os.path.join(root_dir, "datasources/processed_data")
 
@@ -26,7 +27,13 @@ def preprocess(split_use, root_dir=".", split_num = 4):
 
     full_dataset= split_into_exclusive_datasets(data_dir)[split_use]
     # TODO: Add function call to convert audio files to features
-    convert_to_spectrogram_images(full_dataset, root_dir)
-    convert_to_mel_spectrogram_images(full_dataset, root_dir)
-    convert_to_chroma_images(full_dataset, root_dir)
-    convert_to_mfcc_images(full_dataset, root_dir)
+    if method == "spec":
+        convert_to_spectrogram_images(full_dataset, root_dir)
+    if method == "mel":
+        convert_to_mel_spectrogram_images(full_dataset, root_dir)
+    if method == "chroma":
+        convert_to_chroma_images(full_dataset, root_dir)
+    if method == "mfcc":
+        convert_to_mfcc_images(full_dataset, root_dir)
+    else:
+        raise Exception("Must be spec, mel, chroma, or mfcc")
