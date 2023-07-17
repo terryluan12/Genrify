@@ -3,10 +3,11 @@ from preprocessing import preprocess
 import os
 
 # Change to subset used to train the CNN
-subset_num = 0
+subset_num = None
+method = None
 
 
 if not os.path.isdir("datasources/Data") and not os.path.isdir("datasources/processed_data"):
     download_datasets()
 
-preprocess(subset_num)
+preprocess(subset_num, method)
