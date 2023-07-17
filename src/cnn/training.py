@@ -6,6 +6,24 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
+def get_model_name(name, batch_size, learning_rate, epoch):
+    """
+    Generate a name for the model consisting of all the hyperparameter values
+
+    Args:
+        name (str): name of the model
+        batch_size (int): batch size
+        learning_rate (float): learning rate
+        epoch (int): number of epochs
+    Returns:
+        path (str): complete model name with path
+    """
+    path = "model_{0}_bs{1}_lr{2}_epoch{3}".format(name,
+                                                    batch_size,
+                                                    learning_rate,
+                                                    epoch)
+    return path
+
 def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
@@ -77,18 +95,20 @@ def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size
         val_accuracy = (val_correct / val_total) * 100
         val_loss_list.append(val_loss)
         val_accuracy_list.append(val_accuracy)
-
-
+        
         print(f"Epoch [{epoch + 1}/{num_epochs}], "
               f"Train Loss: {train_loss:.4f}, Train Accuracy: {train_accuracy:.2f}%, "
               f"Val Loss: {val_loss:.4f}, Val Accuracy: {val_accuracy:.2f}%")
+        
+        # save model
+        model_path = get_model_name(model.name, batch_size, learning_rate, epoch)
+        os.makedirs("./models", exist_ok=True)
+        torch.save(model.state_dict(), f"./models/{model_path}.pt")
+
 
     confusion_matrix = confusion_matrix.astype('float') / confusion_matrix.sum(axis=1)[:, np.newaxis]
     print("Training finished.")
-    model_path ="model_{0}_bs{1}_lr{2}_epoch{3}".format(model.name,
-                                                        batch_size,
-                                                        learning_rate,
-                                                        epoch)
+    model_path = get_model_name(model.name, batch_size, learning_rate, epoch)
     os.makedirs("./csv", exist_ok=True)
     np.savetxt(f"./csv/{model_path}_train_acc.csv", np.array(train_accuracy_list))
     np.savetxt(f"./csv/{model_path}_val_acc.csv", np.array(val_accuracy_list))
