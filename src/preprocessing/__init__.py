@@ -29,11 +29,11 @@ def preprocess(split_use, method, root_dir=".", split_num = 4):
     # TODO: Add function call to convert audio files to features
     if method == "spec":
         convert_to_spectrogram_images(full_dataset, root_dir)
-    if method == "mel":
+    elif method == "mel":
         convert_to_mel_spectrogram_images(full_dataset, root_dir)
-    if method == "chroma":
+    elif method == "chroma":
         convert_to_chroma_images(full_dataset, root_dir)
-    if method == "mfcc":
+    elif method == "mfcc":
         convert_to_mfcc_images(full_dataset, root_dir)
     else:
         raise Exception("Must be spec, mel, chroma, or mfcc")
