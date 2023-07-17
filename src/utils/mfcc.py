@@ -1,6 +1,8 @@
 import librosa
 import matplotlib.pyplot as plt
 import os
+import matplotlib
+matplotlib.use('Agg')
 
 def extract_features_mfcc(datapoint):
     """
@@ -32,7 +34,7 @@ def save_mfcc_image(mfccs, file_name):
     plt.tight_layout()
     plt.savefig(file_name)
     plt.cla()
-    plt.close()
+    plt.close('all')
     
 def convert_to_mfcc_images(datasets, root_dir="."):
     """

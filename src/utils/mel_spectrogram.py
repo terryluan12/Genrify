@@ -1,6 +1,8 @@
 import librosa
 import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 
 def get_mel_spectrograms():
 

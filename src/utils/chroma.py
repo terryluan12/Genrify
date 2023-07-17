@@ -1,6 +1,8 @@
 import librosa
 import matplotlib.pyplot as plt
 import os
+import matplotlib
+matplotlib.use('Agg')
 
 def extract_features_chroma(datapoint):
     """
@@ -30,7 +32,7 @@ def save_chroma_image(chroma, file_name):
     plt.tight_layout()
     plt.savefig(file_name)
     plt.cla()
-    plt.close()
+    plt.close('all')
     
 def convert_to_chroma_images(datasets, root_dir="."):
     """
