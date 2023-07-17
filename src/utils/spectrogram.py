@@ -1,6 +1,8 @@
 import librosa
 import matplotlib.pyplot as plt
 import os
+import matplotlib
+matplotlib.use('Agg')
 
 def extract_features_spectrogram(datapoint):
     """
@@ -34,7 +36,7 @@ def save_spectrogram_image(spectrogram_data, file_name):
     plt.tight_layout()
     plt.savefig(file_name)
     plt.cla()
-    plt.close()
+    plt.close('all')
 
 def convert_to_spectrogram_images(datasets, root_dir="."):
     """
