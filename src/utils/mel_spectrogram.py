@@ -2,6 +2,22 @@ import librosa
 import matplotlib.pyplot as plt
 import numpy as np
 
+def extract_features_spectrogram(datapoint):
+    """
+    Extract mel-spectrogram features from audio file
+
+    Args:
+        datapoint (tuple(numpy.ndarray, int)):  Tuple of librosa sampled audio file
+    Returns:
+        spectrogram_db (np.array): Spectrogram features in dB (number of frequncy bins) x (number of time frames)
+    """
+    audio, sample_rate = datapoint
+    spectrogram = librosa.stft(audio) 
+    mel_spec = librosa.feature.spectrogram(spectrogram)v
+    melspec_db = librosa.amplitude_to_db(abs(mel_spec))
+
+    return melspec_db
+
 def get_mel_spectrograms():
 
   audio_file = '/content/file_example_WAV_1MG.wav'
@@ -25,4 +41,16 @@ def convert_to_mel_spectrogram_images(data_dir, root_dir="."):
         data_dir (str): path to data directory
         root_dir (string): path to the source directory of the Genrify module
     """
-    pass
+    print(f'Converting to Mel-Spectrogram')
+    processed_data_dir = os.path.join(root_dir, "datasources/mel")
+    os.makedirs(processed_data_dir, exist_ok=True)
+    
+    i = 0
+    for dataset in datasets:
+        for data, label in dataset:
+            os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
+            spectrogram_data = extract_features_spectrogram(data)
+            image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
+            save_spectrogram_image(spectrogram_data, image_path)  
+            
+            i += 1
