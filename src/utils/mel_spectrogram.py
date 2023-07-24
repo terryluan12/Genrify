@@ -36,7 +36,7 @@ def get_mel_spectrograms():
 
 
 
-def convert_to_mel_spectrogram_images(data_dir, root_dir="."):
+def convert_to_mel_spectrogram_images(datasets, root_dir="."):
     """
     Converts the WAV files to Mel Spectrogram features and saves them as images in a new directory structure.
 
