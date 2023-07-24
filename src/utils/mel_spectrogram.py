@@ -2,23 +2,24 @@ import librosa
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
+import os
 matplotlib.use('Agg')
 
-def extract_features_spectrogram(datapoint):
+def extract_features_mel_spectrogram(datapoint):
     """
     Extract mel-spectrogram features from audio file
 
     Args:
         datapoint (tuple(numpy.ndarray, int)):  Tuple of librosa sampled audio file
     Returns:
-        spectrogram_db (np.array): Spectrogram features in dB (number of frequncy bins) x (number of time frames)
+        mel_spec_db (np.array): Spectrogram features in dB (number of frequncy bins) x (number of time frames)
     """
     audio, sample_rate = datapoint
-    spectrogram = librosa.stft(audio) 
-    mel_spec = librosa.feature.spectrogram(spectrogram)
-    melspec_db = librosa.amplitude_to_db(abs(mel_spec))
+    mel_spectrogram = librosa.stft(audio) 
+    mel_spec = librosa.feature.spectrogram(mel_spectrogram)
+    mel_spec_db = librosa.amplitude_to_db(abs(mel_spec))
 
-    return melspec_db
+    return mel_spec_db
 
 def get_mel_spectrograms():
 
@@ -51,8 +52,8 @@ def convert_to_mel_spectrogram_images(data_dir, root_dir="."):
     for dataset in datasets:
         for data, label in dataset:
             os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
-            spectrogram_data = extract_features_spectrogram(data)
+            mel_spectrogram_data = extract_features_mel_spectrogram(data)
             image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
-            save_spectrogram_image(spectrogram_data, image_path)  
+            save_spectrogram_image(mel_spectrogram_data, image_path)  
             
             i += 1
