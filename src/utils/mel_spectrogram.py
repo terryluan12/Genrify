@@ -16,7 +16,7 @@ def extract_features_mel_spectrogram(datapoint):
     """
     audio, sample_rate = datapoint
     mel_spectrogram = librosa.stft(audio) 
-    mel_spec = librosa.feature.spectrogram(mel_spectrogram)
+    mel_spec = librosa.feature.melspectrogram(mel_spectrogram)
     mel_spec_db = librosa.amplitude_to_db(abs(mel_spec))
 
     return mel_spec_db
