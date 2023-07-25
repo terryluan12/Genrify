@@ -4,7 +4,7 @@ import torch.nn as nn
 class Spectrogram_CNN(nn.Module):
     def __init__(self):
         super(Spectrogram_CNN, self).__init__()
-        self.name = "spectrogram_cnn"
+        self.name = "3_layer_spec"
 
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1)
         self.relu1 = nn.ReLU()
