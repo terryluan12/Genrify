@@ -7,26 +7,32 @@ class Spectrogram_CNN(nn.Module):
         self.name = "spectrogram_cnn"
 
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1)
-        self.bn1 = nn.BatchNorm2d(32)  # Batch normalization after the first convolutional layer
+        self.bn1 = nn.BatchNorm2d(32)
         self.relu1 = nn.ReLU()
         self.maxpool1 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.conv2 = nn.Conv2d(32, 128, kernel_size=3, stride=1)
-        self.bn2 = nn.BatchNorm2d(128)  # Batch normalization after the second convolutional layer
+        self.bn2 = nn.BatchNorm2d(128)
         self.relu2 = nn.ReLU()
         self.maxpool2 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.conv3 = nn.Conv2d(128, 256, kernel_size=3, stride=1)
-        self.bn3 = nn.BatchNorm2d(256)  # Batch normalization after the third convolutional layer
+        self.bn3 = nn.BatchNorm2d(256)
         self.relu3 = nn.ReLU()
         self.maxpool3 = nn.MaxPool2d(kernel_size=2, stride=2)
+
+        # Add another convolutional layer with 512 feature maps
+        self.conv4 = nn.Conv2d(256, 512, kernel_size=3, stride=1)
+        self.bn4 = nn.BatchNorm2d(512)
+        self.relu4 = nn.ReLU()
+        self.maxpool4 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         # Calculate the size of the input tensor to the fully connected layer
         self.fc_input_size = self.calculate_fc_input_size()
 
         self.fc1 = nn.Linear(self.fc_input_size, 512)
-        self.bn4 = nn.BatchNorm1d(512)  # Batch normalization before the first fully connected layer
-        self.relu4 = nn.ReLU()
+        self.bn5 = nn.BatchNorm1d(512)
+        self.relu5 = nn.ReLU()
         self.dropout = nn.Dropout(dropout_rate)
         self.fc2 = nn.Linear(512, 10)
 
@@ -46,6 +52,10 @@ class Spectrogram_CNN(nn.Module):
             x = self.bn3(x)
             x = self.relu3(x)
             x = self.maxpool3(x)
+            x = self.conv4(x)  # Added fourth convolutional layer
+            x = self.bn4(x)
+            x = self.relu4(x)
+            x = self.maxpool4(x)
 
         return x.view(x.size(0), -1).shape[1]
 
@@ -65,10 +75,15 @@ class Spectrogram_CNN(nn.Module):
         x = self.relu3(x)
         x = self.maxpool3(x)
 
-        x = x.view(x.size(0), -1)  # Flatten the feature maps
-        x = self.fc1(x)
+        x = self.conv4(x)  # Added fourth convolutional layer
         x = self.bn4(x)
         x = self.relu4(x)
+        x = self.maxpool4(x)
+
+        x = x.view(x.size(0), -1)  # Flatten the feature maps
+        x = self.fc1(x)
+        x = self.bn5(x)
+        x = self.relu5(x)
         x = self.dropout(x)
         x = self.fc2(x)
 
