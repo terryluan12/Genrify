@@ -6,19 +6,23 @@ class Spectrogram_CNN(nn.Module):
         super(Spectrogram_CNN, self).__init__()
         self.name = "spectrogram_cnn"
 
-        self.conv1 = nn.Conv2d(3, 32, kernel_size=5, stride=2, padding=2)
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1)
         self.relu1 = nn.ReLU()
         self.maxpool1 = nn.MaxPool2d(kernel_size=2, stride=2)
 
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(32, 128, kernel_size=3, stride=1)
         self.relu2 = nn.ReLU()
         self.maxpool2 = nn.MaxPool2d(kernel_size=2, stride=2)
+
+        self.conv3 = nn.Conv2d(128, 256, kernel_size=3, stride=1)
+        self.relu3 = nn.ReLU()
+        self.maxpool3 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         # Calculate the size of the input tensor to the fully connected layer
         self.fc_input_size = self.calculate_fc_input_size()
 
         self.fc1 = nn.Linear(self.fc_input_size, 512)
-        self.relu3 = nn.ReLU()
+        self.relu4 = nn.ReLU()
         self.fc2 = nn.Linear(512, 10)
 
     def calculate_fc_input_size(self):
@@ -31,6 +35,9 @@ class Spectrogram_CNN(nn.Module):
             x = self.conv2(x)
             x = self.relu2(x)
             x = self.maxpool2(x)
+            x = self.conv3(x)
+            x = self.relu3(x)
+            x = self.maxpool3(x)
 
         return x.view(x.size(0), -1).shape[1]
 
@@ -43,9 +50,13 @@ class Spectrogram_CNN(nn.Module):
         x = self.relu2(x)
         x = self.maxpool2(x)
 
+        x = self.conv3(x)
+        x = self.relu3(x)
+        x = self.maxpool3(x)
+
         x = x.view(x.size(0), -1)  # Flatten the feature maps
         x = self.fc1(x)
-        x = self.relu3(x)
+        x = self.relu4(x)
         x = self.fc2(x)
 
         return x
