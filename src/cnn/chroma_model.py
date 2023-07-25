@@ -2,23 +2,23 @@ import torch
 import torch.nn as nn
 
 class Chroma_CNN(nn.Module):
-    def __init__(self, kernelSizes = [3, 3, 3, 3], stride=1, padding=0):
+    def __init__(self, kernelSizes = [3, 3, 3, 3], stride=1, padding=0, dropout_rate=0.5):
         super(Chroma_CNN, self).__init__()
         self.name = "chroma_cnn"
 
-        self.conv1 = nn.Conv2d(3, 15, kernel_size=kernelSizes[0], stride=stride, padding=padding)
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=kernelSizes[0], stride=stride, padding=padding)
         self.relu1 = nn.ReLU()
         self.maxpool1 = nn.MaxPool2d(kernel_size=2, stride=2)
 
-        self.conv2 = nn.Conv2d(15, 30, kernel_size=kernelSizes[1], stride=stride, padding=padding)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=kernelSizes[1], stride=stride, padding=padding)
         self.relu2 = nn.ReLU()
         self.maxpool2 = nn.MaxPool2d(kernel_size=2, stride=2)
 
-        self.conv3 = nn.Conv2d(30, 60, kernel_size=kernelSizes[2], stride=stride, padding=padding)
+        self.conv3 = nn.Conv2d(64, 128, kernel_size=kernelSizes[2], stride=stride, padding=padding)
         self.relu3 = nn.ReLU()
         self.maxpool3 = nn.MaxPool2d(kernel_size=2, stride=2)
 
-        self.conv4 = nn.Conv2d(60, 120, kernel_size=kernelSizes[3], stride=stride, padding=padding)
+        self.conv4 = nn.Conv2d(128, 256, kernel_size=kernelSizes[3], stride=stride, padding=padding)
         self.relu4 = nn.ReLU()
         self.maxpool4 = nn.MaxPool2d(kernel_size=2, stride=2)
 
@@ -27,6 +27,7 @@ class Chroma_CNN(nn.Module):
 
         self.fc1 = nn.Linear(self.fc_input_size, 512)
         self.relu5 = nn.ReLU()
+        self.dropout = nn.Dropout(p=dropout_rate)  # Dropout layer with specified rate
         self.fc2 = nn.Linear(512, 10)
 
     def calculate_fc_input_size(self):
@@ -64,6 +65,7 @@ class Chroma_CNN(nn.Module):
         x = x.view(x.size(0), -1)  # Flatten the feature maps
         x = self.fc1(x)
         x = self.relu5(x)
+        x = self.dropout(x)  # Apply dropout
         x = self.fc2(x)
 
         return x
