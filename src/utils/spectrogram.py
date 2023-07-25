@@ -29,7 +29,7 @@ def save_spectrogram_image(spectrogram_data, file_name):
     """
     if spectrogram_data is None:
         return
-    plt.figure(figsize=(10, 4), frameon=False)
+    plt.figure(figsize=(10.0/8.0, 4), frameon=False)
     plt.ylim(0, 11000) # Always plot up to 11kHz
     librosa.display.specshow(spectrogram_data, x_axis='time', y_axis='hz', vmin=-40, vmax=40) # Always show magnitude from -40 to +40 dB
     plt.axis('off')
