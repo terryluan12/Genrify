@@ -106,7 +106,7 @@ def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size
         torch.save(model.state_dict(), f"./models/{model_path}.pt")
 
 
-    confusion_matrix = confusion_matrix.astype('float') / confusion_matrix.sum(axis=1)[:, np.newaxis]
+    confusion_matrix /= confusion_matrix.sum(axis=1)[:, np.newaxis]
     print("Training finished.")
     model_path = get_model_name(model.name, batch_size, learning_rate, epoch)
     os.makedirs("./csv", exist_ok=True)
