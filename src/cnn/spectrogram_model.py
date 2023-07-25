@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 class Spectrogram_CNN(nn.Module):
-    def __init__(self):
+    def __init__(self, dropout_rate=0.5):
         super(Spectrogram_CNN, self).__init__()
         self.name = "3_layer_spec"
 
@@ -23,7 +23,10 @@ class Spectrogram_CNN(nn.Module):
 
         self.fc1 = nn.Linear(self.fc_input_size, 512)
         self.relu4 = nn.ReLU()
+        self.dropout_fc = nn.Dropout(dropout_rate)  # Add dropout to fully connected layers
         self.fc2 = nn.Linear(512, 10)
+
+        self.dropout_conv = nn.Dropout2d(dropout_rate)  # Add dropout to convolutional layers
 
     def calculate_fc_input_size(self):
         # Perform a forward pass to get the output shape of the last convolutional layer
@@ -45,18 +48,22 @@ class Spectrogram_CNN(nn.Module):
         x = self.conv1(x)
         x = self.relu1(x)
         x = self.maxpool1(x)
+        x = self.dropout_conv(x)  # Apply dropout to the first convolutional layer
 
         x = self.conv2(x)
         x = self.relu2(x)
         x = self.maxpool2(x)
+        x = self.dropout_conv(x)  # Apply dropout to the second convolutional layer
 
         x = self.conv3(x)
         x = self.relu3(x)
         x = self.maxpool3(x)
+        x = self.dropout_conv(x)  # Apply dropout to the third convolutional layer
 
         x = x.view(x.size(0), -1)  # Flatten the feature maps
         x = self.fc1(x)
         x = self.relu4(x)
+        x = self.dropout_fc(x)  # Apply dropout to fully connected layer
         x = self.fc2(x)
 
         return x
