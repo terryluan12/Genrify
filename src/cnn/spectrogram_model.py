@@ -21,18 +21,23 @@ class Spectrogram_CNN(nn.Module):
         self.relu3 = nn.ReLU()
         self.maxpool3 = nn.MaxPool2d(kernel_size=2, stride=2)
 
-        # Add another convolutional layer with 512 feature maps
         self.conv4 = nn.Conv2d(256, 512, kernel_size=3, stride=1)
         self.bn4 = nn.BatchNorm2d(512)
         self.relu4 = nn.ReLU()
         self.maxpool4 = nn.MaxPool2d(kernel_size=2, stride=2)
 
+        # Add one more convolutional layer with 1024 feature maps
+        self.conv5 = nn.Conv2d(512, 1024, kernel_size=3, stride=1)
+        self.bn5 = nn.BatchNorm2d(1024)
+        self.relu5 = nn.ReLU()
+        self.maxpool5 = nn.MaxPool2d(kernel_size=2, stride=2)
+
         # Calculate the size of the input tensor to the fully connected layer
         self.fc_input_size = self.calculate_fc_input_size()
 
         self.fc1 = nn.Linear(self.fc_input_size, 512)
-        self.bn5 = nn.BatchNorm1d(512)
-        self.relu5 = nn.ReLU()
+        self.bn6 = nn.BatchNorm1d(512)
+        self.relu6 = nn.ReLU()
         self.dropout = nn.Dropout(dropout_rate)
         self.fc2 = nn.Linear(512, 10)
 
@@ -52,10 +57,14 @@ class Spectrogram_CNN(nn.Module):
             x = self.bn3(x)
             x = self.relu3(x)
             x = self.maxpool3(x)
-            x = self.conv4(x)  # Added fourth convolutional layer
+            x = self.conv4(x)
             x = self.bn4(x)
             x = self.relu4(x)
             x = self.maxpool4(x)
+            x = self.conv5(x)  # Added fifth convolutional layer
+            x = self.bn5(x)
+            x = self.relu5(x)
+            x = self.maxpool5(x)
 
         return x.view(x.size(0), -1).shape[1]
 
@@ -75,15 +84,20 @@ class Spectrogram_CNN(nn.Module):
         x = self.relu3(x)
         x = self.maxpool3(x)
 
-        x = self.conv4(x)  # Added fourth convolutional layer
+        x = self.conv4(x)
         x = self.bn4(x)
         x = self.relu4(x)
         x = self.maxpool4(x)
 
-        x = x.view(x.size(0), -1)  # Flatten the feature maps
-        x = self.fc1(x)
+        x = self.conv5(x)  # Added fifth convolutional layer
         x = self.bn5(x)
         x = self.relu5(x)
+        x = self.maxpool5(x)
+
+        x = x.view(x.size(0), -1)  # Flatten the feature maps
+        x = self.fc1(x)
+        x = self.bn6(x)
+        x = self.relu6(x)
         x = self.dropout(x)
         x = self.fc2(x)
 
