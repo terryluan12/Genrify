@@ -1,5 +1,5 @@
 import seaborn as sns
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 
 def plot_training_curve(path):
