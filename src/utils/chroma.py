@@ -14,7 +14,7 @@ def extract_features_chroma(datapoint):
         chroma (np.array): Chroma features
     """
     audio, sample_rate = datapoint
-    chroma = librosa.feature.chroma_stft(y=audio, sr=sample_rate)
+    chroma = librosa.feature.chroma_cqt(y=audio, sr=sample_rate)
     return chroma
 
 def save_chroma_image(chroma, file_name):
@@ -27,7 +27,7 @@ def save_chroma_image(chroma, file_name):
     """
     if chroma is None:
           return
-    plt.figure(figsize=(6, 4), frameon=False)
+    plt.figure(figsize=(10, 4), frameon=False)
     librosa.display.specshow(chroma)
     plt.tight_layout()
     plt.savefig(file_name)
