@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import StepLR
-from training import get_model_name
+from cnn.training import get_model_name
 import os
 
 def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size, step_size, gamma):
