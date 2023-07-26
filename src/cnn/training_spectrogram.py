@@ -5,11 +5,9 @@ from torch.optim.lr_scheduler import StepLR
 from cnn.training import get_model_name
 import os
 
-def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size, step_size, gamma, weight_decay):
+def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size, step_size, gamma):
     criterion = nn.CrossEntropyLoss()
-
-    # Modify the optimizer initialization to include weight decay
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
