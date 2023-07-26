@@ -5,7 +5,7 @@ from torch.optim.lr_scheduler import StepLR
 from training import get_model_name
 import os
 
-def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size):
+def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size, step_size, gamma):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -13,7 +13,7 @@ def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size
     model.to(device)
 
     # StepLR learning rate scheduler
-    scheduler = StepLR(optimizer, step_size=3, gamma=0.5)
+    scheduler = StepLR(optimizer, step_size=step_size, gamma=gamma)
 
     train_loss_list = []
     train_accuracy_list = []
