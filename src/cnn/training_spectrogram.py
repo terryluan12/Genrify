@@ -12,7 +12,6 @@ def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
-    # StepLR learning rate scheduler
     scheduler = StepLR(optimizer, step_size=step_size, gamma=gamma)
 
     train_loss_list = []
@@ -84,12 +83,10 @@ def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size
               f"Train Loss: {train_loss:.4f}, Train Accuracy: {train_accuracy:.2f}%, "
               f"Val Loss: {val_loss:.4f}, Val Accuracy: {val_accuracy:.2f}%")
 
-        # Save model
         model_path = get_model_name(model.name, batch_size, learning_rate, epoch)
         os.makedirs("./models", exist_ok=True)
         torch.save(model.state_dict(), f"./models/{model_path}.pt")
 
-        # Step the learning rate scheduler
         scheduler.step()
 
     print("Training finished.")

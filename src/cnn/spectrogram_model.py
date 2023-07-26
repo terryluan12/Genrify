@@ -21,7 +21,6 @@ class Spectrogram_CNN(nn.Module):
         self.relu3 = nn.ReLU()
         self.maxpool3 = nn.MaxPool2d(kernel_size=2, stride=2)
 
-        # Add another convolutional layer with 512 feature maps
         self.conv4 = nn.Conv2d(256, 512, kernel_size=3, stride=1)
         self.bn4 = nn.BatchNorm2d(512)
         self.relu4 = nn.ReLU()
@@ -52,7 +51,7 @@ class Spectrogram_CNN(nn.Module):
             x = self.bn3(x)
             x = self.relu3(x)
             x = self.maxpool3(x)
-            x = self.conv4(x)  # Added fourth convolutional layer
+            x = self.conv4(x)
             x = self.bn4(x)
             x = self.relu4(x)
             x = self.maxpool4(x)
@@ -75,7 +74,7 @@ class Spectrogram_CNN(nn.Module):
         x = self.relu3(x)
         x = self.maxpool3(x)
 
-        x = self.conv4(x)  # Added fourth convolutional layer
+        x = self.conv4(x)
         x = self.bn4(x)
         x = self.relu4(x)
         x = self.maxpool4(x)
