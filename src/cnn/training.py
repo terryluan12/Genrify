@@ -88,8 +88,13 @@ def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size
                 val_total += labels.size(0)
                 val_correct += (predicted == labels).sum().item()
 
-                for t, p in zip(labels.view(-1), predicted.view(-1)):
-                    confusion_matrix[t.long(), p.long()] += 1
+                # Convert tensors to numpy arrays and move predicted to CPU
+                labels_arr = labels.cpu().numpy()
+                predicted_arr = predicted.detach().cpu().numpy()
+
+                # Update confusion matrix
+                for t, p in zip(labels_arr, predicted_arr):
+                    confusion_matrix[t, p] += 1
 
         val_loss /= len(val_loader)
         val_accuracy = (val_correct / val_total) * 100
@@ -105,8 +110,8 @@ def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size
         os.makedirs("./models", exist_ok=True)
         torch.save(model.state_dict(), f"./models/{model_path}.pt")
 
-
-    confusion_matrix = confusion_matrix.astype('float') / confusion_matrix.sum(axis=1)[:, np.newaxis]
+    
+    confusion_matrix = confusion_matrix / confusion_matrix.sum(axis=1)[:, np.newaxis]
     print("Training finished.")
     model_path = get_model_name(model.name, batch_size, learning_rate, epoch)
     os.makedirs("./csv", exist_ok=True)
