@@ -31,7 +31,7 @@ def save_mel_spectrogram_image(mel_spectrogram_data, file_name):
     """
     if mel_spectrogram_data is None:
         return
-    plt.figure(figsize=(10, 4), frameon=False)
+    plt.figure(figsize=(5, 4), frameon=False)
     plt.ylim(0, 11000) # Always plot up to 11kHz
     librosa.display.specshow(mel_spectrogram_data, x_axis='time', y_axis='hz', vmin=-40, vmax=40) # Always show magnitude from -40 to +40 dB
     plt.axis('off')
