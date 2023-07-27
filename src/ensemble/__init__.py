@@ -1,3 +1,3 @@
-from .ensemble import get_models
+from .ensemble import get_weak_learners
 
-spectrogram_model, _, _, _ = get_models()
+spectrogram_model, _, _, _ = get_weak_learners()
