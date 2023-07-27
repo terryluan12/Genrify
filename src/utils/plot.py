@@ -1,5 +1,5 @@
 import seaborn as sns
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 
 def plot_training_curve(path):
@@ -30,7 +30,7 @@ def plot_training_curve(path):
     plt.show()
 
 def plot_confusion_matrix(model_path, classes):
-    confusion_matrix = np.loadtxt(f"./csv/{model_path}_confusion_matrix.csv").astype(np.int64)
+    confusion_matrix = np.loadtxt(f"./csv/{model_path}_confusion_matrix.csv")
     
     plt.figure(figsize=(10, 8))
     sns.heatmap(confusion_matrix, annot=True, cmap=plt.cm.Blues, xticklabels=classes, yticklabels=classes)
