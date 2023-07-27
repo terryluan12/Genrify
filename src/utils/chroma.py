@@ -51,7 +51,6 @@ def convert_to_chroma_images(datasets, root_dir="."):
         for data, label in dataset:
             os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
             chroma_features = extract_features_chroma(data)
-            mfccs = extract_features_chroma(data)
             image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
             save_chroma_image(chroma_features, image_path)
             i += 1
