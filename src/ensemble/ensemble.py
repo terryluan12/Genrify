@@ -48,9 +48,9 @@ def full_model(data_loader, cuda=True, weak_learners=None):
 
             stacked_predictions = torch.stack(all_predictions, dim=1)
 
-            majority_vote, _ = torch.mode(stacked_predictions, dim=0)
+            majority_vote = torch.mode(stacked_predictions, dim=1).values
 
-            correct += (majority_vote == labels).sum().item()
+            correct += (majority_vote == labels.squeeze(1)).sum().item()
             total += labels.size(0)
 
     accuracy = correct / float(total)
