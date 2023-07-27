@@ -22,6 +22,8 @@ class Chroma_CNN(nn.Module):
         self.relu4 = nn.ReLU()
         self.maxpool4 = nn.MaxPool2d(kernel_size=2, stride=2)
 
+        self.dropout_conv = nn.Dropout2d(dropout_rate)
+
         # Calculate the size of the input tensor to the fully connected layer
         self.fc_input_size = self.calculate_fc_input_size()
 
@@ -49,18 +51,22 @@ class Chroma_CNN(nn.Module):
         x = self.conv1(x)
         x = self.relu1(x)
         x = self.maxpool1(x)
+        x = self.dropout_conv(x)
 
         x = self.conv2(x)
         x = self.relu2(x)
         x = self.maxpool2(x)
+        x = self.dropout_conv(x)
 
         x = self.conv3(x)
         x = self.relu3(x)
         x = self.maxpool3(x)
+        x = self.dropout_conv(x)
 
         x = self.conv4(x)
         x = self.relu4(x)
         x = self.maxpool4(x)
+        x = self.dropout_conv(x)
 
         x = x.view(x.size(0), -1)  # Flatten the feature maps
         x = self.fc1(x)
