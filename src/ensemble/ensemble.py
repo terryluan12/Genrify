@@ -27,10 +27,10 @@ def full_model(data_loader, weak_learner_1=None, weak_learner_2=None, weak_learn
     if not weak_learner_1:
         weak_learner_1, weak_learner_2, weak_learner_3, weak_learner_4 = get_weak_learners()
     
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     correct = 0
     total = 0
     for inputs, labels in data_loader:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         inputs = inputs.to(device)
         labels = labels.to(device)
 
