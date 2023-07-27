@@ -22,12 +22,12 @@ def get_weak_learners(dir="/content/drive/MyDrive/APS360 Team Project/Final Mode
     return spectrogram, spectrogram, spectrogram, spectrogram
     # return spectrogram, mfcc, chroma_model, mel_spectrogram
 
-def full_model(data_loader, weak_learner_1=None, weak_learner_2=None, weak_learner_3=None, weak_learner_4=None):
+def full_model(data_loader, cuda=True, weak_learner_1=None, weak_learner_2=None, weak_learner_3=None, weak_learner_4=None):
     
     if not weak_learner_1:
         weak_learner_1, weak_learner_2, weak_learner_3, weak_learner_4 = get_weak_learners()
     
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if (torch.cuda.is_available() and cuda) else "cpu")
     correct = 0
     total = 0
     for inputs, labels in data_loader:
