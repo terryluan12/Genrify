@@ -22,48 +22,43 @@ def get_weak_learners(dir="/content/drive/MyDrive/APS360 Team Project/Final Mode
     return spectrogram, spectrogram, spectrogram, spectrogram
     # return spectrogram, mfcc, chroma_model, mel_spectrogram
 
-def full_model(data_loader, cuda=True, weak_learner_1=None, weak_learner_2=None, weak_learner_3=None, weak_learner_4=None):
-    
-    if not weak_learner_1:
-        weak_learner_1, weak_learner_2, weak_learner_3, weak_learner_4 = get_weak_learners()
-    
+def full_model(data_loader, cuda=True, weak_learners=None):
+    if weak_learners is None:
+        weak_learners = get_weak_learners()
+
     device = torch.device("cuda" if (torch.cuda.is_available() and cuda) else "cpu")
+
+    # Move all weak learners to the device
+    for model in weak_learners:
+        model.to(device)
+        model.eval()
+
     correct = 0
     total = 0
-    for inputs, labels in data_loader:
-        inputs = inputs.to(device)
-        labels = labels.to(device)
 
-        weak_learner_1.to(device)
-        weak_learner_1.eval()
-        outputs1 = weak_learner_1(inputs)
-        _, pred1 = torch.max(outputs1.data, dim=1)
+    with torch.no_grad():  # Disable gradient tracking during inference
+        for inputs, labels in data_loader:
+            inputs = inputs.to(device)
+            labels = labels.to(device)
 
-        weak_learner_2.to(device)
-        weak_learner_2.eval()
-        outputs2 = weak_learner_2(inputs)
-        _, pred2 = torch.max(outputs2.data, dim=1)
+            # Inference for each weak learner
+            all_predictions = []
+            for model in weak_learners:
+                outputs = model(inputs)
+                _, predictions = torch.max(outputs.data, dim=1)
+                all_predictions.append(predictions)
 
-        weak_learner_3.to(device)
-        weak_learner_3.eval()
-        outputs3 = weak_learner_3(inputs)
-        _, pred3 = torch.max(outputs3.data, dim=1)
+            stacked_predictions = torch.stack(all_predictions, dim=1)
 
-        weak_learner_4.to(device)
-        weak_learner_4.eval()
-        outputs4 = weak_learner_4(inputs)
-        _, pred4 = torch.max(outputs4.data, dim=1)
+            # Perform majority voting to get final predictions
+            majority_vote, _ = torch.mode(stacked_predictions, dim=1)
 
-        stacked_predictions = torch.stack([pred1, pred2, pred3, pred4], dim=1)
-
-        majority_vote, _ = torch.mode(stacked_predictions, dim=0)
-
-        correct += (majority_vote == labels).sum().item()
-        total += labels.size(0)
+            correct += (majority_vote == labels).sum().item()
+            total += labels.size(0)
 
     accuracy = correct / float(total)
-    
     return accuracy
+
 
 
 
