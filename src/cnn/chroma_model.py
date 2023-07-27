@@ -35,7 +35,7 @@ class Chroma_CNN(nn.Module):
     def calculate_fc_input_size(self):
         # Perform a forward pass to get the output shape of the last convolutional layer
         with torch.no_grad():
-            x = torch.zeros(1, 3, 1000, 400)  # Example input size
+            x = torch.zeros(1, 3, 500, 400)  # Example input size
             x = self.conv1(x)
             x = self.maxpool1(x)
             x = self.conv2(x)
