@@ -14,7 +14,7 @@ def extract_features_chroma(datapoint):
         chroma (np.array): Chroma features
     """
     audio, sample_rate = datapoint
-    chroma = librosa.feature.chroma_cqt(y=audio, sr=sample_rate, n_chroma=36)
+    chroma = librosa.feature.chroma_cqt(y=audio, sr=sample_rate, n_chroma=48)
     return chroma
 
 def save_chroma_image(chroma, file_name):
@@ -51,7 +51,6 @@ def convert_to_chroma_images(datasets, root_dir="."):
         for data, label in dataset:
             os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
             chroma_features = extract_features_chroma(data)
-            mfccs = extract_features_chroma(data)
             image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
             save_chroma_image(chroma_features, image_path)
             i += 1
