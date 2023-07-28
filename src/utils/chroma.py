@@ -27,7 +27,7 @@ def save_chroma_image(chroma, file_name):
     """
     if chroma is None:
           return
-    plt.figure(figsize=(5, 4), frameon=False)
+    plt.figure(figsize=(2.24, 2.24), dpi=100, frameon=False)
     librosa.display.specshow(chroma)
     plt.tight_layout()
     plt.savefig(file_name)
