@@ -55,12 +55,3 @@ def full_model(data_loader, cuda=True, weak_learners=None):
 
     accuracy = correct / float(total)
     return accuracy
-
-
-
-
-
-    
-    
-
-
