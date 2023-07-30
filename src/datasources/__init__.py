@@ -1,6 +1,7 @@
 import os
 import requests
 from zipfile import ZipFile
+from pydub import AudioSegment
 
 def download_datasets(root_dir="."):
     fname = os.path.join(root_dir, "datasources", "music.zip")
@@ -24,4 +25,21 @@ def download_datasets(root_dir="."):
         zipObj.extractall(os.path.join(root_dir, "datasources"))
     os.remove(fname)
     print(f"Downloaded Datasources")
-        
+
+def convert_to_wav(input_file, output_file):
+    sound = AudioSegment.from_mp3(input_file)
+    sound.export(output_file, format="wav")
+    print(f"Conversion successful: {input_file} -> {output_file}")
+
+def convert_files_to_wav(data_dir, output_dir):
+    os.makedirs(output_dir, exist_ok=True)
+    for genre in os.listdir(data_dir):
+        genre_dir = os.path.join(data_dir, genre)
+        if os.path.isdir(genre_dir):
+            wav_dir = os.path.join(output_dir, f"{genre}")
+            os.makedirs(wav_dir, exist_ok=True)
+            for filename in os.listdir(genre_dir):
+                if filename.endswith(".mp3"):
+                    input_file = os.path.join(genre_dir, filename)
+                    output_file = os.path.join(wav_dir, filename.replace(".mp3", ".wav"))
+                    convert_to_wav(input_file, output_file)       
