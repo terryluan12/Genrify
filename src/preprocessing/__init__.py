@@ -22,9 +22,9 @@ def preprocess(split_use, method, root_dir=".", split_num = 4, testing=False):
                 │   └── ...
         
     """
-    data_dir = os.path.join(root_dir, "datasources/processed_data")
 
     if method!="testing":
+        data_dir = os.path.join(root_dir, "datasources/processed_data")
         if not os.path.isdir(data_dir):
             split_into_3_seconds(os.path.join(root_dir, "datasources"))
         full_dataset= split_into_exclusive_datasets(data_dir)[split_use]
@@ -40,10 +40,11 @@ def preprocess(split_use, method, root_dir=".", split_num = 4, testing=False):
         else:
             raise Exception("Must be spec, mel, chroma, or mfcc")
     else:
+        data_dir = os.path.join(root_dir, "datasources/processed_test_data")
         split_test_data_into_3_seconds("/content/Genrify/src/datasources")
         full_dataset=DatasetFolder(data_dir, librosa.load, extensions=[".wav"])
-        convert_to_spectrogram_images(full_dataset, root_dir)
-        convert_to_mel_spectrogram_images(full_dataset, root_dir)
-        convert_to_chroma_images(full_dataset, root_dir)
-        convert_to_mfcc_images(full_dataset, root_dir)
+        convert_to_spectrogram_images([full_dataset], root_dir)
+        convert_to_mel_spectrogram_images([full_dataset], root_dir)
+        convert_to_chroma_images([full_dataset], root_dir)
+        convert_to_mfcc_images([full_dataset], root_dir)
     
