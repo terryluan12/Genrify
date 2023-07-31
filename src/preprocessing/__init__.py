@@ -8,7 +8,7 @@ import os
 import librosa
 
 
-def preprocess(split_use, method, root_dir=".", split_num = 4, testing=False):
+def preprocess(split_use, method, root_dir=".", split_num = 4):
     """
     Preprocess the data
 
