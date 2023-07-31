@@ -23,7 +23,7 @@ def preprocess(split_use, method, root_dir=".", split_num = 4, testing=False):
         
     """
 
-    if method!="testing":
+    if method!="create_testing_data":
         data_dir = os.path.join(root_dir, "datasources/processed_data")
         if not os.path.isdir(data_dir):
             split_into_3_seconds(os.path.join(root_dir, "datasources"))
