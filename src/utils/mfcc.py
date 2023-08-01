@@ -29,7 +29,7 @@ def save_mfcc_image(mfccs, file_name):
     """
     if mfccs is None:
         return
-    plt.figure(figsize=(10, 4), frameon=False)
+    plt.figure(figsize=(3, 2), frameon=False)
     librosa.display.specshow(mfccs)
     plt.tight_layout()
     plt.savefig(file_name)
