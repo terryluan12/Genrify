@@ -5,7 +5,7 @@ from torch.optim.lr_scheduler import StepLR
 from cnn.training import get_model_name
 import os
 
-def train(model, ALNC, train_loader, val_loader, num_epochs, learning_rate, batch_size, step_size, gamma):
+def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size, step_size, gamma):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -35,7 +35,7 @@ def train(model, ALNC, train_loader, val_loader, num_epochs, learning_rate, batc
             optimizer.zero_grad()
 
             # Forward pass
-            outputs = model(ALNC(inputs))
+            outputs = model(inputs)
             loss = criterion(outputs, labels)
 
             # Backward pass and optimization
@@ -63,7 +63,7 @@ def train(model, ALNC, train_loader, val_loader, num_epochs, learning_rate, batc
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
-                outputs = model(ALNC(inputs))
+                outputs = model(inputs)
                 loss = criterion(outputs, labels)
 
                 val_loss += loss.item()
