@@ -28,7 +28,7 @@ class TestHandler:
         chroma_dataset = torchvision.datasets.ImageFolder('/content/Genrify/src/datasources/chroma', transform=data_transform)
         mfcc_dataset = torchvision.datasets.ImageFolder('/content/Genrify/src/datasources/mfcc', transform=data_transform)
 
-        spec_test_loader = torch.utils.data.DataLoader(spec_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+        spec_test_loader = torch.utils.data.DataLoader(spec_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
         mel_test_loader = torch.utils.data.DataLoader(mel_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
         chroma_test_loader = torch.utils.data.DataLoader(chroma_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
         mfcc_test_loader = torch.utils.data.DataLoader(mfcc_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
