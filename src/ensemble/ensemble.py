@@ -4,7 +4,7 @@ import os
 
 def get_weak_learners(dir="/content/drive/MyDrive/APS360 Team Project/Final Models"):
     spectrogram = spectrogram_model.Spectrogram_CNN()
-    mfcc = mfcc_model.MFCC_CNN()
+    mfcc = mfcc_model.MFCC_Resnet()
     chroma = chroma_model.ChromaClassifier()
     mel_spectrogram  = mel_model.MEL_CNN()
 
