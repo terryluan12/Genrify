@@ -1,4 +1,5 @@
 from cnn import spectrogram_model, mfcc_model, chroma_model, mel_model
+import numpy as np
 import torch
 import os
 
@@ -20,7 +21,7 @@ def get_weak_learners(dir="/content/drive/MyDrive/APS360 Team Project/Final Mode
 
     return spectrogram, mfcc, chroma, mel_spectrogram
 
-def full_model(test_loaders, cuda=True, weak_learners=None):
+def full_model(test_loaders, weak_learners=None, plot_dir="/content/Genrify/src/datasources"):
     if weak_learners is None:
         weak_learners = get_weak_learners()
 
@@ -32,6 +33,7 @@ def full_model(test_loaders, cuda=True, weak_learners=None):
     
     correct = 0
     total = 0
+    confusion_matrix = torch.zeros(10,10)
     
     with torch.no_grad():
         
@@ -63,6 +65,11 @@ def full_model(test_loaders, cuda=True, weak_learners=None):
 
         stacked_all_predictions = torch.stack(all_predictions, dim=2)
         majority_vote = torch.mode(stacked_all_predictions, dim=2).values
+
+        for t, p in zip(all_labels[0].view(-1), majority_vote.view(-1)):
+            confusion_matrix[t, p] += 1
+        confusion_matrix = confusion_matrix / confusion_matrix.sum(axis=1)[:, np.newaxis]
+        np.savetxt(f"{plot_dir}.csv", confusion_matrix.numpy())
 
         correct_predictions = majority_vote == all_labels[0]
         
