@@ -21,7 +21,7 @@ def get_weak_learners(dir="/content/drive/MyDrive/APS360 Team Project/Final Mode
 
     return spectrogram, mfcc, chroma, mel_spectrogram
 
-def full_model(test_loaders, weak_learners=None, plot_dir="/content/Genrify/src/datasources"):
+def full_model(test_loaders, weak_learners=None, cuda=True, plot_dir="/content/Genrify/src/datasources"):
     if weak_learners is None:
         weak_learners = get_weak_learners()
 
@@ -69,7 +69,7 @@ def full_model(test_loaders, weak_learners=None, plot_dir="/content/Genrify/src/
         for t, p in zip(all_labels[0].view(-1), majority_vote.view(-1)):
             confusion_matrix[t, p] += 1
         confusion_matrix = confusion_matrix / confusion_matrix.sum(axis=1)[:, np.newaxis]
-        np.savetxt(f"{plot_dir}.csv", confusion_matrix.numpy())
+        np.savetxt(f"{plot_dir}/full_model_confusion_matirx.csv", confusion_matrix.numpy())
 
         correct_predictions = majority_vote == all_labels[0]
         
