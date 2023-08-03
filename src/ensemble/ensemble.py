@@ -4,6 +4,7 @@ import torch
 import os
 
 def get_weak_learners(dir="/content/drive/MyDrive/APS360 Team Project/Final Models"):
+    
     spectrogram = spectrogram_model.Spectrogram_CNN()
     mfcc = mfcc_model.MFCC_Resnet()
     chroma = chroma_model.ChromaClassifier()
@@ -21,7 +22,9 @@ def get_weak_learners(dir="/content/drive/MyDrive/APS360 Team Project/Final Mode
 
     return spectrogram, mfcc, chroma, mel_spectrogram
 
-def full_model(test_loaders, weak_learners=None, cuda=True, plot_dir="/content/Genrify/src/datasources"):
+def full_model(test_loaders, weak_learners=None, cuda=True, plot_dir="/content/Genrify/src/datasources", verbose=False):
+    classes = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
+    models = ['Spectrogram', 'MFCC', 'Chroma', 'Mel-Spectrogram']
     if weak_learners is None:
         weak_learners = get_weak_learners()
 
@@ -55,6 +58,12 @@ def full_model(test_loaders, weak_learners=None, cuda=True, plot_dir="/content/G
                 _, predictions = torch.max(outputs.data, dim=1)
                 model_predictions.append(predictions)
 
+                if verbose:
+                    print(f"Model: {models[weak_learner_i]}")
+                    print(f"Predicted: {classes[predictions[0]]}")
+                    print(f"Actual: {classes[labels[0]]}")
+                    print()
+
             # Same reason as above
             if weak_learner_i == 0:
                 stacked_labels = torch.stack(model_labels, dim=1)
@@ -70,7 +79,7 @@ def full_model(test_loaders, weak_learners=None, cuda=True, plot_dir="/content/G
             confusion_matrix[t, p] += 1
         confusion_matrix = confusion_matrix / confusion_matrix.sum(axis=1)[:, np.newaxis]
         np.savetxt(f"{plot_dir}/full_model_confusion_matirx.csv", confusion_matrix.numpy())
-
+        
         correct_predictions = majority_vote == all_labels[0]
         
         correct = torch.sum(correct_predictions).item()
