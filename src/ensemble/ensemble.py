@@ -10,10 +10,10 @@ def get_weak_learners(dir="/content/drive/MyDrive/APS360 Team Project/Final Mode
     chroma = chroma_model.ChromaClassifier()
     mel_spectrogram  = mel_model.MEL_CNN()
 
-    spectrogram_state = torch.load(os.path.join(dir, "spectrogram_model.pt"))
-    mfcc_state = torch.load(os.path.join(dir, "mfcc_model.pt"))
-    chroma_state = torch.load(os.path.join(dir, "chroma_model.pt"))
-    mel_spectrogram_state = torch.load(os.path.join(dir, "mel_spectrogram_model.pt"))
+    spectrogram_state = torch.load(os.path.join(dir, "spectrogram_model.pt"), map_location=torch.device('cpu'))
+    mfcc_state = torch.load(os.path.join(dir, "mfcc_model.pt"), map_location=torch.device('cpu'))
+    chroma_state = torch.load(os.path.join(dir, "chroma_model.pt"), map_location=torch.device('cpu'))
+    mel_spectrogram_state = torch.load(os.path.join(dir, "mel_spectrogram_model.pt"), map_location=torch.device('cpu'))
 
     spectrogram.load_state_dict(spectrogram_state)
     mfcc.load_state_dict(mfcc_state)
@@ -79,7 +79,7 @@ def full_model(test_loaders, weak_learners=None, cuda=True, plot_dir="/content/G
             confusion_matrix[t, p] += 1
         confusion_matrix = confusion_matrix / confusion_matrix.sum(axis=1)[:, np.newaxis]
         np.savetxt(f"{plot_dir}/full_model_confusion_matirx.csv", confusion_matrix.numpy())
-        
+
         correct_predictions = majority_vote == all_labels[0]
         
         correct = torch.sum(correct_predictions).item()
