@@ -6,6 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.optim.lr_scheduler import StepLR
+import matplotlib.pyplot as plt
 
 def get_model_name(name, batch_size, learning_rate, epoch):
     """
@@ -155,14 +156,14 @@ def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size
     np.savetxt(f"./csv/{model_path}_confusion_matrix.csv", confusion_matrix.numpy())
     return best_epoch
 
-def test_model(model, test_loader):
+def test_model(model, test_loader, save_confusion_matrix=False, plot_dir="/content/Genrify/src/datasources"):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     model.eval()
 
     correct = 0
     total = 0
-
+    confusion_matrix = torch.zeros(10, 10)
     with torch.no_grad():
         for inputs, labels in test_loader:
             inputs = inputs.to(device)
@@ -172,6 +173,18 @@ def test_model(model, test_loader):
             _, predicted = torch.max(outputs, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
+            # confusion matrix
+            if save_confusion_matrix:
+                # Convert tensors to numpy arrays and move predicted to CPU
+                labels_arr = labels.cpu().numpy()
+                predicted_arr = predicted.detach().cpu().numpy()
+
+                # Update confusion matrix
+                for t, p in zip(labels_arr, predicted_arr):
+                    confusion_matrix[t, p] += 1
 
     test_accuracy = (correct / total) * 100
     print(f"Test Accuracy: {test_accuracy:.2f}%")
+    if save_confusion_matrix:
+        confusion_matrix = confusion_matrix / confusion_matrix.sum(axis=1)[:, np.newaxis]
+        np.savetxt(f"{plot_dir}/individual_model_test_confusion_matrix.csv", confusion_matrix.numpy())
