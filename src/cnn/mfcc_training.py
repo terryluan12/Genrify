@@ -156,7 +156,7 @@ def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size
     np.savetxt(f"./csv/{model_path}_confusion_matrix.csv", confusion_matrix.numpy())
     return best_epoch
 
-def test_model(model, test_loader, save_confusion_matrix=False, plot_dir="/content/Genrify/src/datasources"):
+def test_model(model, test_loader, save_confusion_matrix=False, plot_dir="./csv"):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     model.eval()
@@ -187,4 +187,4 @@ def test_model(model, test_loader, save_confusion_matrix=False, plot_dir="/conte
     print(f"Test Accuracy: {test_accuracy:.2f}%")
     if save_confusion_matrix:
         confusion_matrix = confusion_matrix / confusion_matrix.sum(axis=1)[:, np.newaxis]
-        np.savetxt(f"{plot_dir}/individual_model_test_confusion_matrix.csv", confusion_matrix.numpy())
+        np.savetxt(f"{plot_dir}/{model.name}_confusion_matrix.csv", confusion_matrix.numpy())
