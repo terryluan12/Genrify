@@ -27,18 +27,18 @@ def preprocess(split_use, method, root_dir=".", split_num = 4):
         data_dir = os.path.join(root_dir, "datasources/processed_data")
         if not os.path.isdir(data_dir):
             split_into_3_seconds(os.path.join(root_dir, "datasources"))
-        full_dataset= split_into_exclusive_datasets(data_dir)[split_use]
-        # TODO: Add function call to convert audio files to features
-        if method == "spec":
-            convert_to_spectrogram_images(full_dataset, root_dir)
-        elif method == "mel":
-            convert_to_mel_spectrogram_images(full_dataset, root_dir)
-        elif method == "chroma":
-            convert_to_chroma_images(full_dataset, root_dir)
-        elif method == "mfcc":
-            convert_to_mfcc_images(full_dataset, root_dir)
-        else:
-            raise Exception("Must be spec, mel, chroma, or mfcc")
+        # full_dataset= split_into_exclusive_datasets(data_dir)[split_use]
+        # # TODO: Add function call to convert audio files to features
+        # if method == "spec":
+        #     convert_to_spectrogram_images(full_dataset, root_dir)
+        # elif method == "mel":
+        #     convert_to_mel_spectrogram_images(full_dataset, root_dir)
+        # elif method == "chroma":
+        #     convert_to_chroma_images(full_dataset, root_dir)
+        # elif method == "mfcc":
+        #     convert_to_mfcc_images(full_dataset, root_dir)
+        # else:
+        #     raise Exception("Must be spec, mel, chroma, or mfcc")
     else:
         data_dir = os.path.join(root_dir, "datasources/processed_test_data")
         split_test_data_into_3_seconds("/content/Genrify/src/datasources")
