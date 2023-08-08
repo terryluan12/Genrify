@@ -38,7 +38,7 @@ def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", 
 
     full_dataset = DatasetFolder(datasources_dir, librosa.load, extensions=[".wav"])
     
-    subset_length = len(full_dataset)/num_subsets
+    subset_length = int(len(full_dataset)/num_subsets)
     datasets = []
     for i in range(num_subsets):
         indeces = [i*subset_length+x for x in range(subset_length)]
