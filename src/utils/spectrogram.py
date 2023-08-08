@@ -8,14 +8,14 @@ matplotlib.use('Agg')
 
 def extract_features_spectrogram(datapoint, training=False):
     """
-    Extract spectrogram features from audio file. Returns a list if it is for training data
+    Extract spectrogram features from an audio file.
 
     Args:
-        datapoint (tuple(numpy.ndarray, int)):  Tuple of librosa sampled audio file
-        training (bool): is this for training data or not.
+        datapoint (tuple(numpy.ndarray, int)): A tuple containing the audio data as a numpy array and the sample rate as an integer.
+        training (bool): Whether the extraction is for training data or not.
+
     Returns:
-        (if !training) spectrogram_db (np.array): Spectrogram features in dB (number of frequncy bins) x (number of time frames)
-        (if training) spectrogram_db (list of np.array): Spectrogram features in dB (number of frequncy bins) x (number of time frames)
+        (np.array or list of np.array): Spectrogram features in dB. If training is True, returns a list of spectrogram features where each item is of shape (number of frequency bins) x (number of time frames). If training is False, returns a single spectrogram feature of shape (number of frequency bins) x (number of time frames).
     """
     audio, sample_rate = datapoint
     if training:
@@ -56,8 +56,9 @@ def convert_to_spectrogram_images(datasets, root_dir=".", training=False):
     Converts the WAV files to Spectrogram features and saves them as images in a new directory structure.
 
     Args:
-        datasets (List): list of datasets that are being converted to Spectrogram features
-        root_dir (string): path to the source directory of the Genrify module
+        datasets (List): List of datasets that are being converted to Spectrogram images.
+        root_dir (string): Path to the source directory of the Genrify module.
+        training (bool): Whether the conversion is for training or not.
     """
     print(f'Converting to Spectrogram')
     processed_data_dir = os.path.join(root_dir, "datasources/spectrogram")
