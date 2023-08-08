@@ -34,7 +34,7 @@ def save_chroma_image(chroma, file_name):
     plt.cla()
     plt.close('all')
     
-def convert_to_chroma_images(datasets, root_dir="."):
+def convert_to_chroma_images(dataset, root_dir="."):
     """
     Converts the WAV files to Chroma features and saves them as images in a new directory structure.
 
@@ -47,10 +47,9 @@ def convert_to_chroma_images(datasets, root_dir="."):
     os.makedirs(processed_data_dir, exist_ok=True)
 
     i = 0
-    for dataset in datasets:
-        for data, label in dataset:
-            os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
-            chroma_features = extract_features_chroma(data)
-            image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
-            save_chroma_image(chroma_features, image_path)
-            i += 1
+    for data, label in dataset:
+        os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
+        chroma_features = extract_features_chroma(data)
+        image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
+        save_chroma_image(chroma_features, image_path)
+        i += 1

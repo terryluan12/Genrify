@@ -36,7 +36,7 @@ def save_mfcc_image(mfccs, file_name):
     plt.cla()
     plt.close('all')
     
-def convert_to_mfcc_images(datasets, root_dir="."):
+def convert_to_mfcc_images(dataset, root_dir="."):
     """
     Converts the WAV files to MFCC features and saves them as images in a new directory structure.
 
@@ -49,10 +49,9 @@ def convert_to_mfcc_images(datasets, root_dir="."):
     os.makedirs(processed_data_dir, exist_ok=True)
     
     i = 0
-    for dataset in datasets:
-        for data, label in dataset:
-            os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
-            mfccs = extract_features_mfcc(data)
-            image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
-            save_mfcc_image(mfccs, image_path)
-            i += 1
+    for data, label in dataset:
+        os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
+        mfccs = extract_features_mfcc(data)
+        image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
+        save_mfcc_image(mfccs, image_path)
+        i += 1

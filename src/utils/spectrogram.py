@@ -56,5 +56,4 @@ def convert_to_spectrogram_images(dataset, root_dir="."):
         spectrogram_data = extract_features_spectrogram(data)
         image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
         save_spectrogram_image(spectrogram_data, image_path)  
-        
         i += 1
