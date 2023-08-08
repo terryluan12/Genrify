@@ -38,10 +38,12 @@ def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", 
 
     full_dataset = DatasetFolder(datasources_dir, librosa.load, extensions=[".wav"])
     
-    subset_length = int(len(full_dataset)/num_subsets)
+    num_genres = 10
+    genre_length = 1000
+    samples_per_genre = int(genre_length/num_subsets)
     datasets = []
     for i in range(num_subsets):
-        indeces = [i*subset_length+x for x in range(subset_length)]
+        indeces = [i*samples_per_genre + j*genre_length + k for j in range(num_genres) for k in range(samples_per_genre)]
         datasets.append(torch.utils.data.Subset(full_dataset, indeces))
 
     return datasets
