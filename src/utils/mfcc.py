@@ -7,12 +7,14 @@ matplotlib.use('Agg')
 
 def extract_features_mfcc(datapoint, training=False):
     """
-    Extract MFCC features from audio file
+    Extract MFCC features from an audio file.
 
     Args:
-        datapoint (tuple(numpy.ndarray, int)):  Tuple of librosa sampled audio file
+        datapoint (tuple(numpy.ndarray, int)): A tuple containing the audio data as a numpy array and the sample rate as an integer.
+        training (bool): Whether the extraction is for training data or not.
+
     Returns:
-        mfccs (np.array): MFCC features
+        (np.array or list of np.array): MFCC features. If training is True, returns a list of MFCC features, where each item is of shape (number of MFCC coefficients) x (number of time frames). If training is False, returns a single MFCC feature of shape (number of MFCC coefficients) x (number of time frames).
     """
     num_mfcc = 40
     audio, sample_rate = datapoint
@@ -49,8 +51,9 @@ def convert_to_mfcc_images(datasets, root_dir=".", training=False):
     Converts the WAV files to MFCC features and saves them as images in a new directory structure.
 
     Args:
-        datasets (List): list of datasets that are being converted to MFCC Images
-        root_dir (string): path to the source directory of the Genrify module
+        datasets (List): List of datasets that are being converted to MFCC images.
+        root_dir (string): Path to the source directory of the Genrify module.
+        training (bool): Whether the conversion is for training or not.
     """
     print(f'Converting to MFCC')
     processed_data_dir = os.path.join(root_dir, "datasources/mfcc")
