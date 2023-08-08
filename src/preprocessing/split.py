@@ -55,8 +55,7 @@ def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", 
     valid_subsets = [torch.utils.data.random_split(full_valid, [valid_size]*num_subsets)]
     test_subsets = [torch.utils.data.random_split(full_test, [test_size]*num_subsets)]
 
-    
-    return [training_subsets, valid_subsets, test_subsets]
+    return [(training_subsets[x], valid_subsets[x], test_subsets[x]) for x in range(num_subsets)]
 
 def split_test_data_into_3_seconds(datasources_dir="datasources"):
     print(f'Splitting test music Data into 3 second chunks')
