@@ -39,7 +39,7 @@ def shuffle_subsets(subsets):
     for i in range(len(subsets[0])):
         perm_indeces = random.sample(indeces, len(indeces))
         swap_values = [subsets[x][i] for x in range(num_subsets)]
-        for j in len(subsets):
+        for j in range(num_subsets):
             subsets[j][i] = swap_values[perm_indeces[j]]
             
 
