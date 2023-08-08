@@ -3,6 +3,7 @@ from pydub import AudioSegment
 from torchvision.datasets import DatasetFolder
 import torch
 import librosa
+import random
 
 def split_into_3_seconds(datasources_dir="datasources"):
     print(f'Splitting full music Data into 3 second chunks')
@@ -32,8 +33,18 @@ def split_into_3_seconds(datasources_dir="datasources"):
                         extract = sound[i * 3000 : (i + 1) * 3000]
                         extract.export(os.path.join(destination_dir, file + "_trimmed" + str(i) + ".wav"), format="wav")
 
+def shuffle_subsets(subsets):
+    num_subsets = len(subsets)
+    indeces = list(range(num_subsets))
+    for i in range(len(subsets[0])):
+        perm_indeces = random.sample(indeces, len(indeces))
+        swap_values = [subsets[x][i] for x in range(num_subsets)]
+        for j in len(subsets):
+            subsets[j][i] = swap_values[perm_indeces[j]]
+            
 
 def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", num_subsets=4):
+    torch.manual_seed(42)
     print(f"Splitting processed Data into {num_subsets} exclusive datasets.")
 
     full_dataset = DatasetFolder(datasources_dir, librosa.load, extensions=[".wav"])
@@ -45,6 +56,8 @@ def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", 
     for i in range(num_subsets):
         indeces = [i*samples_per_genre + j*genre_length + k for j in range(num_genres) for k in range(samples_per_genre)]
         datasets.append(torch.utils.data.Subset(full_dataset, indeces))
+
+    shuffle_subsets(datasets)
 
     return datasets
 
