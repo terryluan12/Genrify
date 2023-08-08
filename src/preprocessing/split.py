@@ -36,19 +36,26 @@ def split_into_3_seconds(datasources_dir="datasources"):
 def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", num_subsets=4):
     print(f"Splitting processed Data into {num_subsets} exclusive datasets.")
     torch.manual_seed(42)
-    subsets = []
-    subset_split = [0.7, 0.15, 0.15]
-
-    divide = 1./num_subsets
-    equal_lengths = [divide for _ in range(num_subsets)]
 
     full_dataset = DatasetFolder(datasources_dir, librosa.load, extensions=[".wav"])
-    full_subsets = torch.utils.data.random_split(full_dataset, equal_lengths)
-    for full_subset in full_subsets:
-        subset = torch.utils.data.random_split(full_subset, subset_split)
-        subsets.append(subset)
+    training_indeces = [num for subrange in [range(x, x+700) for x in range(0, 1000, 100)] for num in subrange]
+    valid_indeces = [num for subrange in [range(x+700, x+700+150) for x in range(0, 1000, 100)] for num in subrange]
+    test_indeces = [num for subrange in [range(x+700+150, x+1000) for x in range(0, 1000, 100)] for num in subrange]
+    
+    full_training = torch.utils.data.Subset(full_dataset, training_indeces)
+    full_valid = torch.utils.data.Subset(full_dataset, valid_indeces)
+    full_test = torch.utils.data.Subset(full_dataset, test_indeces)
 
-    return subsets
+    subsets_ratio = 1./num_subsets
+    training_size = int(subsets_ratio * len(full_training))
+    valid_size = int(subsets_ratio * len(full_valid))
+    test_size = int(subsets_ratio * len(full_test))
+
+    training_subsets = torch.utils.data.random_split(full_training, [training_size]*num_subsets)
+    valid_subsets = torch.utils.data.random_split(full_valid, [valid_size]*num_subsets)
+    test_subsets = torch.utils.data.random_split(full_test, [test_size]*num_subsets)
+
+    return [(training_subsets[x], valid_subsets[x], test_subsets[x]) for x in range(num_subsets)]
 
 def split_test_data_into_3_seconds(datasources_dir="datasources"):
     print(f'Splitting test music Data into 3 second chunks')
