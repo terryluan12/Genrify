@@ -70,7 +70,7 @@ def convert_to_mel_spectrogram_images(datasets, root_dir=".", training=False):
     for dataset in datasets:
         for data, label in dataset:
             os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
-            mel_spectrogram_data = extract_features_mel_spectrogram(data)
+            mel_spectrogram_data = extract_features_mel_spectrogram(data, training=training)
             
             if isinstance(mel_spectrogram_data, list):
                 for idx, mel_data in enumerate(mel_spectrogram_data):
