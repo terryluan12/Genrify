@@ -47,10 +47,13 @@ def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", 
     full_test = torch.utils.data.Subset(full_dataset, test_indeces)
 
     subsets_ratio = 1./num_subsets
+    training_size = int(subsets_ratio * len(full_training))
+    valid_size = int(subsets_ratio * len(full_valid))
+    test_size = int(subsets_ratio * len(full_test))
 
-    training_subsets = [torch.utils.data.random_split(full_training, [subsets_ratio*len(full_training)]*num_subsets)]
-    valid_subsets = [torch.utils.data.random_split(full_valid, [subsets_ratio*len(full_valid)]*num_subsets)]
-    test_subsets = [torch.utils.data.random_split(full_test, [subsets_ratio*len(full_test)]*num_subsets)]
+    training_subsets = [torch.utils.data.random_split(full_training, [training_size]*num_subsets)]
+    valid_subsets = [torch.utils.data.random_split(full_valid, [valid_size]*num_subsets)]
+    test_subsets = [torch.utils.data.random_split(full_test, [test_size]*num_subsets)]
 
     
     return [training_subsets, valid_subsets, test_subsets]
