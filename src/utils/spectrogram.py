@@ -2,22 +2,35 @@ import librosa
 import matplotlib.pyplot as plt
 import os
 import matplotlib
+from augment_sample import augment_sample
+
 matplotlib.use('Agg')
 
-def extract_features_spectrogram(datapoint):
+def extract_features_spectrogram(datapoint, training=False):
     """
-    Extract spectrogram features from audio file
+    Extract spectrogram features from audio file. Returns a list if it is for training data
 
     Args:
         datapoint (tuple(numpy.ndarray, int)):  Tuple of librosa sampled audio file
+        training (bool): is this for training data or not.
     Returns:
-        spectrogram_db (np.array): Spectrogram features in dB (number of frequncy bins) x (number of time frames)
+        (if !training) spectrogram_db (np.array): Spectrogram features in dB (number of frequncy bins) x (number of time frames)
+        (if training) spectrogram_db (list of np.array): Spectrogram features in dB (number of frequncy bins) x (number of time frames)
     """
     audio, sample_rate = datapoint
-    spectrogram = librosa.stft(audio) 
-    spectrogram_db = librosa.amplitude_to_db(abs(spectrogram))
+    if training:
+        augmented_spectrograms = []
+        audios = augment_sample(audio, sample_rate)
+        for audio in audios:
+            spectrogram = librosa.stft(audio)
+            spectrogram_db = librosa.amplitude_to_db(abs(spectrogram))
+            augmented_spectrograms.append(spectrogram_db)
+        return augmented_spectrograms
+    else: 
+        spectrogram = librosa.stft(audio) 
+        spectrogram_db = librosa.amplitude_to_db(abs(spectrogram))
 
-    return spectrogram_db
+        return spectrogram_db
 
 def save_spectrogram_image(spectrogram_data, file_name):
     """
@@ -38,7 +51,7 @@ def save_spectrogram_image(spectrogram_data, file_name):
     plt.cla()
     plt.close('all')
 
-def convert_to_spectrogram_images(datasets, root_dir="."):
+def convert_to_spectrogram_images(datasets, root_dir=".", training=False):
     """
     Converts the WAV files to Spectrogram features and saves them as images in a new directory structure.
 
@@ -54,8 +67,13 @@ def convert_to_spectrogram_images(datasets, root_dir="."):
     for dataset in datasets:
         for data, label in dataset:
             os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
-            spectrogram_data = extract_features_spectrogram(data)
-            image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
-            save_spectrogram_image(spectrogram_data, image_path)  
+            spectrogram_data = extract_features_spectrogram(data, training=training)
+            if isinstance(spectrogram_data, list):
+                for idx, spec_data in enumerate(spectrogram_data):
+                    image_path = os.path.join(processed_data_dir, str(label), f"{i}_{idx}.png")
+                    save_spectrogram_image(spec_data, image_path)
+            else:
+                image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
+                save_spectrogram_image(spectrogram_data, image_path)
             
             i += 1
