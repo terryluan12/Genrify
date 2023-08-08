@@ -34,21 +34,39 @@ def split_into_3_seconds(datasources_dir="datasources"):
 
 
 def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", num_subsets=4):
-    print(f"Splitting processed Data into {num_subsets} exclusive datasets.")
-    torch.manual_seed(42)
-    subsets = []
-    subset_split = [0.7, 0.15, 0.15]
-
-    divide = 1./num_subsets
-    equal_lengths = [divide for _ in range(num_subsets)]
-
     full_dataset = DatasetFolder(datasources_dir, librosa.load, extensions=[".wav"])
-    full_subsets = torch.utils.data.random_split(full_dataset, equal_lengths)
-    for full_subset in full_subsets:
-        subset = torch.utils.data.random_split(full_subset, subset_split)
-        subsets.append(subset)
+    training_indeces = [num for subrange in [range(x, x+700) for x in range(0, 1000, 100)] for num in subrange]
+    valid_indeces = [num for subrange in [range(x+700, x+700+150) for x in range(0, 1000, 100)] for num in subrange]
+    test_indeces = [num for subrange in [range(x+700+150, x+1000) for x in range(0, 1000, 100)] for num in subrange]
+    
+    full_training = torch.utils.data.Subset(full_dataset, training_indeces)
+    full_valid = torch.utils.data.Subset(full_dataset, valid_indeces)
+    full_test = torch.utils.data.Subset(full_dataset, test_indeces)
 
-    return subsets
+    subsets_ratio = 1./num_subsets
+
+    training_subsets = [torch.utils.data.random_split(full_training, [subsets_ratio*(full_training)]*num_subsets)]
+    valid_subsets = [torch.utils.data.random_split(full_valid, [subsets_ratio*(full_valid)]*num_subsets)]
+    test_subsets = [torch.utils.data.random_split(full_test, [subsets_ratio*(full_test)]*num_subsets)]
+
+    
+    return [training_subsets, valid_subsets, test_subsets]
+
+    # print(f"Splitting processed Data into {num_subsets} exclusive datasets.")
+    # torch.manual_seed(42)
+    # subsets = []
+    # subset_split = [0.7, 0.15, 0.15]
+
+    # divide = 1./num_subsets
+    # equal_lengths = [divide for _ in range(num_subsets)]
+
+    # full_dataset = DatasetFolder(datasources_dir, librosa.load, extensions=[".wav"])
+    # full_subsets = torch.utils.data.random_split(full_dataset, equal_lengths)
+    # for full_subset in full_subsets:
+    #     subset = torch.utils.data.random_split(full_subset, subset_split)
+    #     subsets.append(subset)
+
+    # return subsets
 
 def split_test_data_into_3_seconds(datasources_dir="datasources"):
     print(f'Splitting test music Data into 3 second chunks')
