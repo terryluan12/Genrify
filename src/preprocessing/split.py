@@ -41,7 +41,6 @@ def shuffle_subsets(subsets):
         swap_values = [subsets[x][i] for x in range(num_subsets)]
         for j in range(num_subsets):
             subsets[j][i] = swap_values[perm_indeces[j]]
-            
 
 def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", num_subsets=4):
     torch.manual_seed(42)
@@ -52,13 +51,17 @@ def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", 
     num_genres = 10
     genre_length = 1000
     samples_per_genre = int(genre_length/num_subsets)
-    datasets = []
+    subset_indeces = []
     for i in range(num_subsets):
         indeces = [i*samples_per_genre + j*genre_length + k for j in range(num_genres) for k in range(samples_per_genre)]
-        datasets.append(torch.utils.data.Subset(full_dataset, indeces))
+        subset_indeces.append(indeces)
+    
+    shuffle_subsets(subset_indeces)
 
-    shuffle_subsets(datasets)
-
+    datasets = []
+    for i in range(num_subsets):
+        datasets.append(torch.utils.data.Subset(full_dataset, subset_indeces[i]))
+    
     return datasets
 
 def split_test_data_into_3_seconds(datasources_dir="datasources"):
