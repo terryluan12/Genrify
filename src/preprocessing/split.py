@@ -35,20 +35,16 @@ def split_into_3_seconds(datasources_dir="datasources"):
 
 def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", num_subsets=4):
     print(f"Splitting processed Data into {num_subsets} exclusive datasets.")
-    torch.manual_seed(42)
-    subsets = []
-    subset_split = [0.7, 0.15, 0.15]
-
-    divide = 1./num_subsets
-    equal_lengths = [divide for _ in range(num_subsets)]
 
     full_dataset = DatasetFolder(datasources_dir, librosa.load, extensions=[".wav"])
-    full_subsets = torch.utils.data.random_split(full_dataset, equal_lengths)
-    for full_subset in full_subsets:
-        subset = torch.utils.data.random_split(full_subset, subset_split)
-        subsets.append(subset)
+    
+    subset_length = len(full_dataset)/num_subsets
+    datasets = []
+    for i in range(num_subsets):
+        indeces = [i*subset_length+x for x in range(subset_length)]
+        datasets.append(torch.utils.data.Subset(full_dataset, indeces))
 
-    return subsets
+    return datasets
 
 def split_test_data_into_3_seconds(datasources_dir="datasources"):
     print(f'Splitting test music Data into 3 second chunks')
