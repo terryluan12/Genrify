@@ -20,11 +20,11 @@ def augment_sample(sample, sr):
 
     # 2. Change pitch
     for n_steps in [4, 6]:
-        augmented_samples.append(lb.effects.pitch_shift(sample, sr, n_steps))
+        augmented_samples.append(lb.effects.pitch_shift(sample, sr=sr,  n_steps=n_steps))
 
     # 3. Time Stretch
     for rate in [0.5, 2.0]:
-        augmented_samples.append(lb.effects.time_stretch(sample, rate))
+        augmented_samples.append(lb.effects.time_stretch(sample, rate=rate))
 
     # 4. white noise
     wn = np.random.randn(len(sample))
