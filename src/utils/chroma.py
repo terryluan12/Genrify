@@ -2,20 +2,30 @@ import librosa
 import matplotlib.pyplot as plt
 import os
 import matplotlib
+from augment_sample import augment_sample
 matplotlib.use('Agg')
 
-def extract_features_chroma(datapoint):
+def extract_features_chroma(datapoint, training=False):
     """
-    Extract Chroma features from audio file
+    Extract Chroma features from an audio file.
 
     Args:
-        datapoint (tuple(numpy.ndarray, int)):  Tuple of librosa sampled audio file
+        datapoint (tuple(numpy.ndarray, int)): A tuple containing the audio data as a numpy array and the sample rate as an integer.
+        training (bool): Whether the extraction is for training data or not.
+
     Returns:
-        chroma (np.array): Chroma features
+        (np.array or list of np.array): Chroma features. If training is True, returns a list of Chroma features where each item is of shape (number of Chroma bins) x (number of time frames). If training is False, returns a single Chroma feature of shape (number of Chroma bins) x (number of time frames).
     """
     audio, sample_rate = datapoint
-    chroma = librosa.feature.chroma_cqt(y=audio, sr=sample_rate, n_chroma=48, bins_per_octave=48)
-    return chroma
+    if training:
+        augmented_chromas = []
+        audios = augment_sample(audio, sample_rate)
+        for audio in audios:
+            augmented_chromas.append(librosa.feature.chroma_cqt(y=audio, sr=sample_rate, n_chroma=48, bins_per_octave=48))
+        return augmented_chromas
+    else:
+        chroma = librosa.feature.chroma_cqt(y=audio, sr=sample_rate, n_chroma=48, bins_per_octave=48)
+        return chroma
 
 def save_chroma_image(chroma, file_name):
     """
@@ -34,22 +44,29 @@ def save_chroma_image(chroma, file_name):
     plt.cla()
     plt.close('all')
     
-def convert_to_chroma_images(dataset, root_dir="."):
+def convert_to_chroma_images(datasets, root_dir=".", training=False):
     """
     Converts the WAV files to Chroma features and saves them as images in a new directory structure.
 
     Args:
-        datasets (List): list of datasets that are being converted to MFCC Images
-        root_dir (string): path to the source directory of the Genrify module
+        datasets (List): List of datasets that are being converted to Chroma images.
+        root_dir (string): Path to the source directory of the Genrify module.
+        training (bool): Whether the conversion is for training or not.
     """
     print(f'Converting to Chroma')
     processed_data_dir = os.path.join(root_dir, "datasources/chroma")
     os.makedirs(processed_data_dir, exist_ok=True)
 
     i = 0
-    for data, label in dataset:
-        os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
-        chroma_features = extract_features_chroma(data)
-        image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
-        save_chroma_image(chroma_features, image_path)
-        i += 1
+    for dataset in datasets:
+        for data, label in dataset:
+            os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
+            chroma_features = extract_features_chroma(data, training=training)
+            if isinstance(chroma_features, list):
+                for idx, chroma_data in enumerate(chroma_features):
+                    image_path = os.path.join(processed_data_dir, str(label), f"{i}_{idx}.png")
+                    save_chroma_image(chroma_data, image_path)
+            else:
+                image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
+                save_chroma_image(chroma_features, image_path)
+            i += 1
