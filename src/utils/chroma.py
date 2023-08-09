@@ -44,12 +44,12 @@ def save_chroma_image(chroma, file_name):
     plt.cla()
     plt.close('all')
     
-def convert_to_chroma_images(datasets, root_dir=".", training=False):
+def convert_to_chroma_images(dataset, root_dir=".", training=False):
     """
     Converts the WAV files to Chroma features and saves them as images in a new directory structure.
 
     Args:
-        datasets (List): List of datasets that are being converted to Chroma images.
+        dataset (torch.utils.data.Subset): Subset of the original dataset containing audio data and corresponding labels.
         root_dir (string): Path to the source directory of the Genrify module.
         training (bool): Whether the conversion is for training or not.
     """
@@ -58,15 +58,14 @@ def convert_to_chroma_images(datasets, root_dir=".", training=False):
     os.makedirs(processed_data_dir, exist_ok=True)
 
     i = 0
-    for dataset in datasets:
-        for data, label in dataset:
-            os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
-            chroma_features = extract_features_chroma(data, training=training)
-            if isinstance(chroma_features, list):
-                for idx, chroma_data in enumerate(chroma_features):
-                    image_path = os.path.join(processed_data_dir, str(label), f"{i}_{idx}.png")
-                    save_chroma_image(chroma_data, image_path)
-            else:
-                image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
-                save_chroma_image(chroma_features, image_path)
-            i += 1
+    for data, label in dataset:
+        os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
+        chroma_features = extract_features_chroma(data, training=training)
+        if isinstance(chroma_features, list):
+            for idx, chroma_data in enumerate(chroma_features):
+                image_path = os.path.join(processed_data_dir, str(label), f"{i}_{idx}.png")
+                save_chroma_image(chroma_data, image_path)
+        else:
+            image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
+            save_chroma_image(chroma_features, image_path)
+        i += 1

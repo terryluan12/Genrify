@@ -53,12 +53,12 @@ def save_mel_spectrogram_image(mel_spectrogram_data, file_name):
     plt.close('all')
 
 
-def convert_to_mel_spectrogram_images(datasets, root_dir=".", training=False):
+def convert_to_mel_spectrogram_images(dataset, root_dir=".", training=False):
     """
     Converts the WAV files to Mel Spectrogram features and saves them as images in a new directory structure.
 
     Args:
-        datasets (List): List of datasets that are being converted to Mel Spectrogram features.
+        dataset (torch.utils.data.Subset): Subset of the original dataset containing audio data and corresponding labels.
         root_dir (string): Path to the source directory of the Genrify module.
         training (bool): Whether the conversion is for training or not.
     """
@@ -67,17 +67,16 @@ def convert_to_mel_spectrogram_images(datasets, root_dir=".", training=False):
     os.makedirs(processed_data_dir, exist_ok=True)
     
     i = 0
-    for dataset in datasets:
-        for data, label in dataset:
-            os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
-            mel_spectrogram_data = extract_features_mel_spectrogram(data, training=training)
+    for data, label in dataset:
+        os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
+        mel_spectrogram_data = extract_features_mel_spectrogram(data, training=training)
+        
+        if isinstance(mel_spectrogram_data, list):
+            for idx, mel_data in enumerate(mel_spectrogram_data):
+                image_path = os.path.join(processed_data_dir, str(label), f"{i}_{idx}.png")
+                save_mel_spectrogram_image(mel_data, image_path)
+        else:
+            image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
+            save_mel_spectrogram_image(mel_spectrogram_data, image_path)  
             
-            if isinstance(mel_spectrogram_data, list):
-                for idx, mel_data in enumerate(mel_spectrogram_data):
-                    image_path = os.path.join(processed_data_dir, str(label), f"{i}_{idx}.png")
-                    save_mel_spectrogram_image(mel_data, image_path)
-            else:
-                image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
-                save_mel_spectrogram_image(mel_spectrogram_data, image_path)  
-                
-            i += 1
+        i += 1

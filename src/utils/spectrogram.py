@@ -51,12 +51,12 @@ def save_spectrogram_image(spectrogram_data, file_name):
     plt.cla()
     plt.close('all')
 
-def convert_to_spectrogram_images(datasets, root_dir=".", training=False):
+def convert_to_spectrogram_images(dataset, root_dir=".", training=False):
     """
     Converts the WAV files to Spectrogram features and saves them as images in a new directory structure.
 
     Args:
-        datasets (List): List of datasets that are being converted to Spectrogram images.
+        dataset (torch.utils.data.Subset): Subset of the original dataset containing audio data and corresponding labels.
         root_dir (string): Path to the source directory of the Genrify module.
         training (bool): Whether the conversion is for training or not.
     """
@@ -65,16 +65,15 @@ def convert_to_spectrogram_images(datasets, root_dir=".", training=False):
     os.makedirs(processed_data_dir, exist_ok=True)
     
     i = 0
-    for dataset in datasets:
-        for data, label in dataset:
-            os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
-            spectrogram_data = extract_features_spectrogram(data, training=training)
-            if isinstance(spectrogram_data, list):
-                for idx, spec_data in enumerate(spectrogram_data):
-                    image_path = os.path.join(processed_data_dir, str(label), f"{i}_{idx}.png")
-                    save_spectrogram_image(spec_data, image_path)
-            else:
-                image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
-                save_spectrogram_image(spectrogram_data, image_path)
-            
-            i += 1
+    for data, label in dataset:
+        os.makedirs(os.path.join(processed_data_dir, str(label)), exist_ok=True)
+        spectrogram_data = extract_features_spectrogram(data, training=training)
+        if isinstance(spectrogram_data, list):
+            for idx, spec_data in enumerate(spectrogram_data):
+                image_path = os.path.join(processed_data_dir, str(label), f"{i}_{idx}.png")
+                save_spectrogram_image(spec_data, image_path)
+        else:
+            image_path = os.path.join(processed_data_dir, str(label), f"{i}.png")
+            save_spectrogram_image(spectrogram_data, image_path)
+        
+        i += 1
