@@ -30,21 +30,21 @@ def preprocess(split_use, method, root_dir=".", split_num = 4):
         full_dataset= split_into_exclusive_datasets(data_dir)[split_use]
         # TODO: Add function call to convert audio files to features
         if method == "spec":
-            convert_to_spectrogram_images(full_dataset, root_dir)
+            convert_to_spectrogram_images(full_dataset, root_dir, training=True)
         elif method == "mel":
-            convert_to_mel_spectrogram_images(full_dataset, root_dir)
+            convert_to_mel_spectrogram_images(full_dataset, root_dir, training=True)
         elif method == "chroma":
-            convert_to_chroma_images(full_dataset, root_dir)
+            convert_to_chroma_images(full_dataset, root_dir, training=True)
         elif method == "mfcc":
-            convert_to_mfcc_images(full_dataset, root_dir)
+            convert_to_mfcc_images(full_dataset, root_dir, training=True)
         else:
             raise Exception("Must be spec, mel, chroma, or mfcc")
     else:
         data_dir = os.path.join(root_dir, "datasources/processed_test_data")
         split_test_data_into_3_seconds("/content/Genrify/src/datasources")
         full_dataset=DatasetFolder(data_dir, librosa.load, extensions=[".wav"])
-        convert_to_spectrogram_images([full_dataset], root_dir)
-        convert_to_mel_spectrogram_images([full_dataset], root_dir)
-        convert_to_chroma_images([full_dataset], root_dir)
-        convert_to_mfcc_images([full_dataset], root_dir)
+        convert_to_spectrogram_images([full_dataset], root_dir, training=False)
+        convert_to_mel_spectrogram_images([full_dataset], root_dir, training=False)
+        convert_to_chroma_images([full_dataset], root_dir, training=False)
+        convert_to_mfcc_images([full_dataset], root_dir, training=False)
     
