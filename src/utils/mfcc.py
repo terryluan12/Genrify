@@ -2,7 +2,7 @@ import librosa
 import matplotlib.pyplot as plt
 import os
 import matplotlib
-from augment_sample import augment_sample
+from utils.augment_sample import augment_sample
 matplotlib.use('Agg')
 
 def extract_features_mfcc(datapoint, training=False):

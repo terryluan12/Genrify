@@ -1,5 +1,5 @@
 import librosa as lb
-import np
+import numpy as np
 
 def augment_sample(sample, sr):
     """

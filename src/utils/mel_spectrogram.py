@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
 import os
-from augment_sample import augment_sample
+from utils.augment_sample import augment_sample
 matplotlib.use('Agg')
 
 def extract_features_mel_spectrogram(datapoint, training=False):
