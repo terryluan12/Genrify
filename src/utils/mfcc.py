@@ -51,7 +51,7 @@ def convert_to_mfcc_images(dataset, root_dir=".", training=False):
     Converts the WAV files to MFCC features and saves them as images in a new directory structure.
 
     Args:
-        dataset_subset (torch.utils.data.Subset): Subset of the original dataset containing audio data and corresponding labels.
+        dataset (torch.utils.data.Subset): Subset of the original dataset containing audio data and corresponding labels.
         root_dir (string): Path to the source directory of the Genrify module.
         training (bool): Whether the conversion is for training or not.
     """
