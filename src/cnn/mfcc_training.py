@@ -69,8 +69,6 @@ def train(model, train_loader, val_loader, num_epochs, learning_rate, batch_size
         correct = 0
         total = 0
 
-        model.train()
-        
         for inputs, labels in train_loader:
             inputs = inputs.to(device)
             labels = labels.to(device)
