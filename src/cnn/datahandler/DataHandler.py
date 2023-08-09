@@ -32,11 +32,10 @@ class DataHandler:
         dataset = torchvision.datasets.ImageFolder(self.data_dir, transform=data_transform)
         num_samples = len(dataset)
 
-        indeces_training  = [x for x in range(int(num_samples*self.train_ratio))]
-        indeces_val = [x for x in range(int(num_samples*self.train_ratio), num_samples)]
-
-        train_dataset = torch.utils.data.Subset(dataset, indeces_training)
-        val_dataset = torch.utils.data.Subset(dataset, indeces_val)
+        train_size = int(num_samples * self.train_ratio)
+        val_size = num_samples - train_size
+        
+        train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
 
         train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
         val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
