@@ -48,9 +48,17 @@ def convert_files(data_dir, output_dir, wavToMp3 = False):
                     if filename.endswith(".mp3"):
                         input_file = os.path.join(genre_dir, filename)
                         output_file = os.path.join(wav_dir, filename.replace(".mp3", ".wav"))
-                        convert_to_wav(input_file, output_file)
+                        try:
+                            convert_to_wav(input_file, output_file)
+                        except:
+                            print(f'Skipping {input_file}')
+                            continue
                 else:
                     if filename.endswith(".wav"):
                         input_file = os.path.join(genre_dir, filename)
                         output_file = os.path.join(wav_dir, filename.replace(".wav", ".mp3"))
-                        convert_to_mp3(input_file, output_file)
+                        try:
+                            convert_to_mp3(input_file, output_file)
+                        except:
+                            print(f'Skipping {input_file}')
+                            continue
