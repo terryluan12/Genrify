@@ -43,8 +43,8 @@ def preprocess(split_use, method, root_dir=".", split_num = 4):
         data_dir = os.path.join(root_dir, "datasources/processed_test_data")
         split_test_data_into_3_seconds("/content/Genrify/src/datasources")
         full_dataset=DatasetFolder(data_dir, librosa.load, extensions=[".wav"])
-        convert_to_spectrogram_images([full_dataset], root_dir, training=False)
-        convert_to_mel_spectrogram_images([full_dataset], root_dir, training=False)
-        convert_to_chroma_images([full_dataset], root_dir, training=False)
-        convert_to_mfcc_images([full_dataset], root_dir, training=False)
+        convert_to_spectrogram_images(full_dataset, root_dir, training=False)
+        convert_to_mel_spectrogram_images(full_dataset, root_dir, training=False)
+        convert_to_chroma_images(full_dataset, root_dir, training=False)
+        convert_to_mfcc_images(full_dataset, root_dir, training=False)
     
