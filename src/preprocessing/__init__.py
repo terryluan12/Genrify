@@ -8,7 +8,7 @@ import os
 import librosa
 
 
-def preprocess(split_use, method, root_dir=".", split_num = 4, is_test=False):
+def preprocess(split_use, method, root_dir=".", split_num = 4, is_training=True):
     """
     Preprocess the data
 
@@ -30,13 +30,13 @@ def preprocess(split_use, method, root_dir=".", split_num = 4, is_test=False):
         full_dataset= split_into_exclusive_datasets(data_dir)[split_use]
         # TODO: Add function call to convert audio files to features
         if method == "spec":
-            convert_to_spectrogram_images(full_dataset, root_dir, training=True and not is_test)
+            convert_to_spectrogram_images(full_dataset, root_dir, training=True and is_training)
         elif method == "mel":
-            convert_to_mel_spectrogram_images(full_dataset, root_dir, training=True and not is_test)
+            convert_to_mel_spectrogram_images(full_dataset, root_dir, training=True and is_training)
         elif method == "chroma":
-            convert_to_chroma_images(full_dataset, root_dir, training=True and not is_test)
+            convert_to_chroma_images(full_dataset, root_dir, training=True and is_training)
         elif method == "mfcc":
-            convert_to_mfcc_images(full_dataset, root_dir, training=True and not is_test)
+            convert_to_mfcc_images(full_dataset, root_dir, training=True and is_training)
         else:
             raise Exception("Must be spec, mel, chroma, or mfcc")
     else:
