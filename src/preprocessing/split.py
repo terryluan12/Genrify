@@ -82,13 +82,26 @@ def split_test_data_into_3_seconds(datasources_dir="datasources"):
                 os.mkdir(destination_dir)
             for _, _, files in os.walk(origin_dir):
                 for file in files:
+                    _, extension = os.path.splitext(file)
                     origin_file = os.path.join(origin_dir, file)
-                    try:
-                        sound = AudioSegment.from_wav(origin_file)
-                    except:
-                        print(f'Skipping {origin_file}')
+                    if extension == ".mp3":
+                        try:
+                            sound = AudioSegment.from_mp3(origin_file)
+                        except:
+                            print(f'Skipping {origin_file}')
+                            continue
+                    elif extension == ".wav":
+                        try:
+                            sound = AudioSegment.from_wav(origin_file)
+                        except:
+                            print(f'Skipping {origin_file}')
+                            continue
+                    else:
+                        print(f'Skipping {origin_file}, not a wav or mp3 file')
                         continue
-                    num_segments = int(45 / 3) #Skip first 10 seconds and save 45 seconds worth
+                    
+                    # Skip first 10 seconds and save 45 seconds worth
+                    num_segments = int(45 / 3)
                     for i in range(num_segments):
                         extract = sound[(i * 3000)+10000 : ((i + 1) * 3000)+10000]
                         extract.export(os.path.join(destination_dir, file + "_trimmed" + str(i) + ".wav"), format="wav")
