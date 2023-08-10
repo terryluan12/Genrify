@@ -31,7 +31,12 @@ def convert_to_wav(input_file, output_file):
     sound.export(output_file, format="wav")
     print(f"Conversion successful: {input_file} -> {output_file}")
 
-def convert_files_to_wav(data_dir, output_dir):
+def convert_to_mp3(input_file, output_file):
+    sound = AudioSegment.from_wav(input_file)
+    sound.export(output_file, format="mp3")
+    print(f"Conversion successful: {input_file} -> {output_file}")
+
+def convert_files(data_dir, output_dir, wavToMp3 = False):
     os.makedirs(output_dir, exist_ok=True)
     for genre in os.listdir(data_dir):
         genre_dir = os.path.join(data_dir, genre)
@@ -39,7 +44,13 @@ def convert_files_to_wav(data_dir, output_dir):
             wav_dir = os.path.join(output_dir, f"{genre}")
             os.makedirs(wav_dir, exist_ok=True)
             for filename in os.listdir(genre_dir):
-                if filename.endswith(".mp3"):
-                    input_file = os.path.join(genre_dir, filename)
-                    output_file = os.path.join(wav_dir, filename.replace(".mp3", ".wav"))
-                    convert_to_wav(input_file, output_file)       
+                if wavToMp3 == False:
+                    if filename.endswith(".mp3"):
+                        input_file = os.path.join(genre_dir, filename)
+                        output_file = os.path.join(wav_dir, filename.replace(".mp3", ".wav"))
+                        convert_to_wav(input_file, output_file)
+                else:
+                    if filename.endswith(".wav"):
+                        input_file = os.path.join(genre_dir, filename)
+                        output_file = os.path.join(wav_dir, filename.replace(".wav", ".mp3"))
+                        convert_to_wav(input_file, output_file)
