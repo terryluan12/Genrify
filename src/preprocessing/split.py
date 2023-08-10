@@ -47,7 +47,7 @@ def split_into_exclusive_datasets(datasources_dir="datasources/processed_data", 
 
     print(f"Splitting processed Data into {num_subsets} exclusive datasets.")
 
-    full_dataset = DatasetFolder(datasources_dir, librosa.load, extensions=[".wav"])
+    full_dataset = DatasetFolder(datasources_dir, librosa.load, extensions=[".mp3"])
     
     num_genres = 10
     genre_length = 1000
