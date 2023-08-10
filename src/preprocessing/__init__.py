@@ -3,6 +3,7 @@ from utils.mel_spectrogram import convert_to_mel_spectrogram_images
 from utils.spectrogram import convert_to_spectrogram_images
 from utils.mfcc import convert_to_mfcc_images
 from preprocessing.split import split_into_3_seconds, split_test_data_into_3_seconds, split_into_exclusive_datasets
+from datasources import convert_files
 from torchvision.datasets import DatasetFolder
 import os
 import librosa
@@ -27,7 +28,8 @@ def preprocess(split_use, method, root_dir=".", split_num = 4, is_training=True)
         data_dir = os.path.join(root_dir, "datasources/processed_data")
         if not os.path.isdir(data_dir):
             split_into_3_seconds(os.path.join(root_dir, "datasources"))
-        full_dataset= split_into_exclusive_datasets(data_dir)[split_use]
+        convert_files(data_dir, data_dir+"_mp3", wavToMp3=True)
+        full_dataset= split_into_exclusive_datasets(data_dir+"_mp3")[split_use]
         # TODO: Add function call to convert audio files to features
         if method == "spec":
             convert_to_spectrogram_images(full_dataset, root_dir, training=True and is_training)
