@@ -27,7 +27,10 @@ def preprocess(split_use, method, root_dir=".", split_num = 4, is_training=True)
         data_dir = os.path.join(root_dir, "datasources/processed_data")
         if not os.path.isdir(data_dir):
             split_into_3_seconds(os.path.join(root_dir, "datasources"))
-        full_dataset= split_into_exclusive_datasets(data_dir)[split_use]
+        if is_training:
+            full_dataset= split_into_exclusive_datasets(data_dir)[split_use]
+        else:
+            full_dataset=DatasetFolder(data_dir, librosa.load, extensions=[".wav"])
         # TODO: Add function call to convert audio files to features
         if method == "spec":
             convert_to_spectrogram_images(full_dataset, root_dir, training=True and is_training)
